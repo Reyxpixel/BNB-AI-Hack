@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sentient NPC System</title>
+    <title>NPChain</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
@@ -12,10 +12,14 @@
 <body>
     <div class="header">
         <div class="header-left">
-            <h1>Sentient NPC System</h1>
+            <div class="logo-container">
+                <div class="logo-icon">⚡</div>
+                <h1>NPChain</h1>
+            </div>
         </div>
         <div class="header-right">
-            <span>A Virtual Demo</span>
+            <div class="status-indicator"></div>
+            <span>Neural Protocol Demo</span>
         </div>
     </div>
     
@@ -54,6 +58,7 @@
             </div>
             
             <div class="chat-container" id="chat-container">
+                <div class="chat-background-gradient"></div>
                 <div class="chat-fade-top"></div>
                 <div class="chat-content">
                     <div class="welcome-message">
