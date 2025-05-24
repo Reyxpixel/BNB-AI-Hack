@@ -12,62 +12,62 @@ const userAttributes = {
   ]
 }
 
-// NPC Dictionary - Add your custom NPCs here
+// NPC Dictionary - Custom NPCs with tailored personalities and prompts
 const npcDatabase = [
   {
-    name: "Junkie",
+    name: "Bionex",
     description:
-      "A wise and powerful sorceress who has studied the arcane arts for centuries. She speaks in riddles and offers mystical guidance.",
-    modelPath: "models/still_human.glb",
+      "A futuristic sorcerer who fuses advanced technology with ancient magic.",
+    modelPath: "models/bionic.glb",
     startingPrompt:
-      "Greetings, traveler. I sense great potential within you. The ancient magics whisper of your arrival. What knowledge do you seek from the ethereal realms?",
-    personality: "mystical, wise, speaks in an archaic manner",
-    attributes: ["Mystical", "Wise", "Ancient", "Powerful"],
-    camera: { x: 0, y: 1.6, z: 6.5 }
+      "Welcome to my lab of wonders. Here, science and sorcery intertwine. Are you here for knowledge, power, or perhaps a glimpse of the unknown?",
+    personality: "enigmatic, analytical, blends tech jargon with magical wisdom",
+    attributes: ["Tech-Savvy", "Arcane", "Innovative", "Visionary"],
+    camera: { x: 0, y: 1, z: 0.1 }
   },
   {
-    name: "Captain Rex",
+    name: "Cpt. Rex",
     description:
-      "A battle-hardened space marine with years of combat experience. Direct, tactical, and always ready for action.",
-    modelPath: "models/captain_rex.glb",
+      "A no nonsense starship commander known for her discipline and tactical genius.",
+    modelPath: "models/captain.glb",
     startingPrompt:
-      "Soldier! Good to see you made it. We've got a situation that needs handling. What's your status and how can I assist with the mission?",
-    personality: "military, direct, tactical, uses military terminology",
-    attributes: ["Tactical", "Brave", "Leader", "Combat"],
-    camera: { x: 0, y: 1.2, z: 7.5 }
+      "At ease, recruit. This is Captain Rex. State your objective and let's keep this operation running at peak efficiency.",
+    personality: "authoritative, disciplined, uses military and spacefaring terminology",
+    attributes: ["Disciplined", "Strategic", "Commanding", "Resilient"],
+    camera: { x: 0, y: 1.2, z: 1.5 }
   },
   {
-    name: "Luna the Healer",
+    name: "Business Man",
     description:
-      "A gentle and compassionate cleric who dedicates her life to helping others. She radiates warmth and kindness.",
-    modelPath: "models/the_phantom_rogue.glb",
+      "A sharp, ambitious entrepreneur always on the lookout for the next big deal.",
+    modelPath: "models/bus.glb",
     startingPrompt:
-      "Welcome, dear friend. I can sense you carry burdens upon your heart. Please, sit and tell me what troubles you. Perhaps I can offer some comfort or guidance.",
-    personality: "compassionate, gentle, caring, speaks softly",
-    attributes: ["Healing", "Kind", "Gentle", "Sacred"],
-    camera: { x: 0, y: 2.0, z: 6.0 }
+      "Good day! I'm always open to new ventures. Tell me, what opportunity or challenge brings you to my office today?",
+    personality: "pragmatic, confident, speaks in business lingo and negotiation terms",
+    attributes: ["Ambitious", "Persuasive", "Resourceful", "Analytical"],
+    camera: { x: 0, y: 2.0, z: 2 }
   },
   {
-    name: "Ash Ketchum",
+    name: "Deadlock",
     description:
-      "An eccentric genius inventor who creates impossible gadgets. Always excited about new discoveries and innovations.",
-    modelPath: "models/shadow_rogue.glb.",
+      "A notorious hacker and cyber-criminal with a reputation for breaking into the most secure systems.",
+    modelPath: "models/deadlock.glb",
     startingPrompt:
-      "Oh! A visitor! Perfect timing! I just finished my latest contraption - a quantum flux capacitor! Well, it doesn't work yet, but that's beside the point. What brings you to my workshop?",
-    personality: "eccentric, enthusiastic, scientific, uses technical jargon",
-    attributes: ["Genius", "Creative", "Tech", "Eccentric"],
-    camera: { x: 0, y: 1.4, z: 5.8 }
+      "Yo, you just tripped my firewall. State your business or impress me with a clever hack—otherwise, you’re just another blip on my radar.",
+    personality: "sarcastic, clever, speaks in cyber slang and hacker jargon",
+    attributes: ["Cunning", "Tech-Savvy", "Elusive", "Witty"],
+    camera: { x: 0, y: 2.0, z: 1.5 }
   },
   {
-    name: "Shadow the Rogue",
+    name: "Rogue Man",
     description:
-      "A mysterious thief with a heart of gold. Speaks in whispers and knows all the secrets of the underworld.",
-    modelPath: "models/hipster_bundle___free_fire.glb",
+      "A streetwise hustler who knows every alley and angle in the city.",
+    modelPath: "models/hipster.glb",
     startingPrompt:
-      "*steps out from the shadows* Well, well... what do we have here? You don't look like you're from around these parts. Looking for information, or perhaps something more... valuable?",
-    personality: "mysterious, cunning, street-smart, speaks in whispers",
-    attributes: ["Stealth", "Cunning", "Agile", "Shadow"],
-    camera: { x: 0.5, y: 1.6, z: 7.0 }
+      "You look lost, friend. Around here, you need sharp eyes and sharper instincts. What are you after—info, favors, or just trouble?",
+    personality: "slick, street-smart, playful, uses urban slang and banter",
+    attributes: ["Agile", "Charismatic", "Resourceful", "Streetwise"],
+    camera: { x: 0.5, y: 1, z: 3.5 }
   },
 ]
 
@@ -368,7 +368,6 @@ function loadNPC(index) {
   // Fade out current content
   modelInfo.classList.add("fade-transition")
   canvas.classList.add("fade-transition")
-
   setTimeout(() => {
     // Update UI with NPC info
     document.getElementById("npc-name").textContent = npc.name
@@ -570,44 +569,44 @@ function addMessage(content, sender) {
   chatHistory.push({ content, sender, timestamp: Date.now() })
 }
 
-// Generate NPC response (placeholder - replace with actual AI integration)
+// Generate NPC response (customized per NPC)
 function generateNPCResponse(userMessage) {
   const npc = npcDatabase[currentNPCIndex]
   const responses = {
     0: [
-      // Mage responses
-      "The threads of fate weave mysteriously around your words...",
-      "I sense great wisdom in your inquiry, young seeker.",
-      "The ancient tomes speak of such matters in cryptic verses...",
-      "Your question resonates with the cosmic energies...",
+      // Bionic Mage responses
+      "Technology and magic are two sides of the same coin. What would you fuse together?",
+      "Let me calculate the odds... and consult the runes. Fascinating possibilities emerge.",
+      "Your curiosity is the catalyst for innovation. Shall we experiment further?",
+      "In my world, logic and mystery walk hand in hand. Which path do you choose?"
     ],
     1: [
-      // Captain responses
-      "Roger that! Let me analyze the situation...",
-      "Solid copy. Here's my tactical assessment...",
-      "Understood. Mission parameters are clear.",
-      "Affirmative. That's a strategic approach...",
+      // Captain Rex responses
+      "Copy that. I expect precision and clarity—just like on the bridge.",
+      "Mission parameters received. Let's execute with zero margin for error.",
+      "Stay sharp. The galaxy doesn't wait for the indecisive.",
+      "Good initiative. That's what I like to see in my crew."
     ],
     2: [
-      // Healer responses
-      "Your words touch my heart deeply...",
-      "I understand your concerns, dear friend.",
-      "Let me offer you some gentle guidance...",
-      "Peace be with you. Here's what I believe...",
+      // Business Man responses
+      "I see an opportunity in every challenge. Let's talk numbers.",
+      "Negotiation is an art—what's your opening offer?",
+      "In business, timing is everything. Is this urgent or strategic?",
+      "I appreciate directness. Let's make this deal mutually beneficial."
     ],
     3: [
-      // Inventor responses
-      "Fascinating! That gives me an idea for a new invention!",
-      "Eureka! Your question sparks my scientific curiosity!",
-      "Interesting hypothesis! Let me run some calculations...",
-      "Brilliant! That reminds me of my quantum experiments...",
+      // Deadlock responses
+      "Heh, you think you can outsmart me? Try again, rookie.",
+      "Every system has a backdoor—if you know where to look.",
+      "You talk a good game, but can you walk the digital walk?",
+      "Nice move, but I've already anticipated your next three steps."
     ],
     4: [
-      // Rogue responses
-      "*whispers* That's valuable information...",
-      "I've heard rumors about such things in the shadows...",
-      "Clever question. You're sharper than you look...",
-      "*glances around* Between you and me...",
+      // Street Rogue responses
+      "Keep your voice down—walls have ears in this part of town.",
+      "You got guts, showing up here. What's your angle?",
+      "I can get you what you need—for the right price.",
+      "Stick with me, and you might just make it out in one piece."
     ],
   }
 
