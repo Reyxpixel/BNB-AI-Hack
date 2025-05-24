@@ -528,25 +528,38 @@ function initEventListeners() {
   clearBtn.addEventListener("click", clearChat)
 }
 
-// Send chat message
-function sendMessage() {
-  const input = document.getElementById("chat-input")
-  const message = input.value.trim()
-
-  if (!message) return
-
-  // Add user message
-  addMessage(message, "user")
-  input.value = ""
-
-  // Simulate NPC response
-  setTimeout(
-    () => {
-      const npcResponse = generateNPCResponse(message)
-      addMessage(npcResponse, "npc")
-    },
-    1000 + Math.random() * 2000,
-  )
+// Update the sendMessage function to handle async responses
+async function sendMessage() {
+    const input = document.getElementById("chat-input");
+    const message = input.value.trim();
+    
+    if (!message) return;
+    
+    // Add user message
+    addMessage(message, "user");
+    input.value = "";
+    
+    // Show typing indicator
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'message npc-message';
+    typingDiv.innerHTML = '<div class="message-content">Processing through neural network...</div>';
+    document.querySelector('.chat-content').appendChild(typingDiv);
+    
+    try {
+        // Get AI response from backend
+        const npcResponse = await generateNPCResponse(message);
+        
+        // Remove typing indicator
+        typingDiv.remove();
+        
+        // Add NPC response
+        addMessage(npcResponse, "npc");
+        
+    } catch (error) {
+        console.error('Error generating response:', error);
+        typingDiv.remove();
+        addMessage("My systems are temporarily offline. Please try again.", "npc");
+    }
 }
 
 // Add message to chat with improved bubble sizing
@@ -569,50 +582,40 @@ function addMessage(content, sender) {
   chatHistory.push({ content, sender, timestamp: Date.now() })
 }
 
-// Generate NPC response (customized per NPC)
-function generateNPCResponse(userMessage) {
-  const npc = npcDatabase[currentNPCIndex]
-  const responses = {
-    0: [
-      // Bionic Mage responses
-      "Technology and magic are two sides of the same coin. What would you fuse together?",
-      "Let me calculate the odds... and consult the runes. Fascinating possibilities emerge.",
-      "Your curiosity is the catalyst for innovation. Shall we experiment further?",
-      "In my world, logic and mystery walk hand in hand. Which path do you choose?"
-    ],
-    1: [
-      // Captain Rex responses
-      "Copy that. I expect precision and clarity—just like on the bridge.",
-      "Mission parameters received. Let's execute with zero margin for error.",
-      "Stay sharp. The galaxy doesn't wait for the indecisive.",
-      "Good initiative. That's what I like to see in my crew."
-    ],
-    2: [
-      // Business Man responses
-      "I see an opportunity in every challenge. Let's talk numbers.",
-      "Negotiation is an art—what's your opening offer?",
-      "In business, timing is everything. Is this urgent or strategic?",
-      "I appreciate directness. Let's make this deal mutually beneficial."
-    ],
-    3: [
-      // Deadlock responses
-      "Heh, you think you can outsmart me? Try again, rookie.",
-      "Every system has a backdoor—if you know where to look.",
-      "You talk a good game, but can you walk the digital walk?",
-      "Nice move, but I've already anticipated your next three steps."
-    ],
-    4: [
-      // Street Rogue responses
-      "Keep your voice down—walls have ears in this part of town.",
-      "You got guts, showing up here. What's your angle?",
-      "I can get you what you need—for the right price.",
-      "Stick with me, and you might just make it out in one piece."
-    ],
-  }
-
-  const npcResponses = responses[currentNPCIndex] || ["Interesting...", "Tell me more.", "I see..."]
-  return npcResponses[Math.floor(Math.random() * npcResponses.length)]
+// Replace the entire generateNPCResponse function in script.js with this:
+async function generateNPCResponse(userMessage) {
+    try {
+        const npc = npcDatabase[currentNPCIndex];
+        
+        // Make API call to your running backend
+        const response = await fetch('http://localhost:3000/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                npcId: npc.name,
+                messages: [
+                    { role: "system", content: npc.startingPrompt },
+                    { role: "user", content: userMessage }
+                ]
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        return data.reply;
+        
+    } catch (error) {
+        console.error('Error calling backend:', error);
+        return "My neural pathways are experiencing interference. Please try again.";
+    }
 }
+
+
 
 // Clear chat
 function clearChat() {
