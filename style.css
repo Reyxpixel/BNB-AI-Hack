@@ -6,13 +6,15 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
-  background: #252525;
+  background: url('background.jpg') no-repeat center center fixed;
+  background-size: cover;
   min-height: 100vh;
   overflow: hidden;
   color: #fffbe6; /* Soft yellowish white */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
 
 /* Header */
 .header {
@@ -141,8 +143,8 @@ body {
 
 .perception-dropdown {
   position: absolute;
-  top: calc(100% + 12px);
-  left: 0;
+  top: calc(100% + 20px);
+  left: 10px;
   background: rgba(0, 0, 0, 0.95);
   border: 1px solid rgba(255, 221, 51, 0.2);
   border-radius: 20px;
@@ -312,7 +314,7 @@ body {
   display: flex;
   height: calc(100vh - 75px);
   max-width: 1400px;
-  margin: 75px auto 0;
+  margin: 0px auto 0; /* Idhar you can change the gap between the topbar and the main content */
   gap: 28px;
   padding: 28px 40px;
 }
