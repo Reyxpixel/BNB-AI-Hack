@@ -4,42 +4,32 @@ const mnemonic = fs.readFileSync(".secret").toString().trim();
 
 module.exports = {
   networks: {
-    // BNB Smart Chain Testnet Configuration
-    testnet: {
+    bsctestnet: { // Use this name in your deploy command
       provider: () => new HDWalletProvider(
         mnemonic,
-        "https://data-seed-prebsc-1-s1.binance.org:8545"
+        "https://bsc-testnet.publicnode.com"
       ),
-      network_id: 97,           // BSC Testnet network id
-      confirmations: 10,        // # of confirmations to wait between deployments
-      timeoutBlocks: 200,       // # of blocks before deployment times out
-      skipDryRun: true          // Skip dry run before migrations
+      network_id: 97,               // <-- REQUIRED for BSC Testnet
+      gas: 6000000,
+      gasPrice: 20000000000,        // 20 Gwei
+      confirmations: 2,
+      timeoutBlocks: 200,
+      skipDryRun: true,
+      networkCheckTimeout: 100000
     }
-    // You can add more networks here (e.g., mainnet, development, etc.)
   },
-
-  // Mocha testing framework options
-  mocha: {
-    // timeout: 100000
-  },
-
-  // Solidity compiler configuration
   compilers: {
     solc: {
-      version: "0.8.21",        // Use a specific solc version
-      // Uncomment below for advanced settings
-      // settings: {
-      //   optimizer: {
-      //     enabled: false,
-      //     runs: 200
-      //   },
-      //   evmVersion: "byzantium"
-      // }
+      version: "0.8.21", // or "0.8.0" to match your contract
+      settings: {
+        optimizer: {
+          enabled: true,
+          runs: 200
+        }
+      }
     }
+  },
+  mocha: {
+    timeout: 100000
   }
-
-  // Truffle DB is disabled by default
-  // db: {
-  //   enabled: false
-  // }
 };
