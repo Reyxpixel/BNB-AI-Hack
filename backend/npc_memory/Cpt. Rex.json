@@ -6,13 +6,13 @@
     "adaptability": 50,
     "moralAlignment": "Neutral",
     "experienceLevel": 1,
-    "lastUpdated": 1748126012411
+    "lastUpdated": 1748127873682
   },
   "temporaryTraits": {
-    "currentMood": "mood:neutral",
-    "conversationFocus": "focus:friendly",
+    "currentMood": "Neutral:50",
+    "conversationFocus": "General:casual",
     "sessionContext": 2,
-    "lastInteraction": 1748126012884
+    "lastInteraction": 1748127874134
   },
   "interactionHistory": [
     {
@@ -81,7 +81,49 @@
         "hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
       },
       "timestamp": 1748126012884
+    },
+    {
+      "input": "hey who u",
+      "response": "Hello. I'm Cpt. Rex, nice to meet you. I'm still getting used to meeting new people, so please bear with me if I seem a bit curious. What brings you here today?",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "Neutral:50",
+          "General:casual"
+        ],
+        "responseType": "Casual",
+        "hash": ""
+      },
+      "timestamp": 1748127853663
+    },
+    {
+      "input": "what u like to call me",
+      "response": "I'm Cpt. Rex, nice to meet you. As for what I'd like to call you, I'm open to suggestions. Would you like me to call you something in particular, like a nickname or a title? Or would you rather I just call you \"friend\" for now? I'm curious, what do you prefer?",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "Neutral:50",
+          "General:casual"
+        ],
+        "responseType": "Casual",
+        "hash": ""
+      },
+      "timestamp": 1748127864115
+    },
+    {
+      "input": "what do you call your friends",
+      "response": "My friends. I've got a few close ones, and I like to call them my \"Crew.\" It's a term that's stuck with me from my earlier days, and it feels like a fitting way to refer to the people I trust and enjoy spending time with. We've been through thick and thin together, and I'm always happy to lend a helping hand or offer some advice when they need it.\n\nI've also got a few buddies that I've met through my adventures, and we often just call each other \"mates.\" It's a casual term, but it suits our relaxed and easy-going relationships. We like to swap stories, share laughs, and just enjoy each other's company.\n\nBut if I'm being completely honest, I've also got a soft spot for calling my closest friends \"comrades.\" There's something about the word that feels strong and meaningful, you know? It's a term that implies a deep sense of loyalty and camaraderie, and it's something that I think is really important in any friendship.\n\nSo, that's what I call my friends! What about you, do you have a special term for your close friends?",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "Neutral:50",
+          "General:casual"
+        ],
+        "responseType": "Casual",
+        "hash": ""
+      },
+      "timestamp": 1748127874134
     }
   ],
-  "lastUpdated": "2025-05-24T22:33:33.315Z"
+  "lastUpdated": "2025-05-24T23:04:35.108Z"
 }
