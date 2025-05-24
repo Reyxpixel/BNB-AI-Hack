@@ -3,69 +3,75 @@ pragma solidity ^0.8.0;
 
 contract NPCTraitStorage {
     struct NPCTraits {
-        string coreStatement;      // ← IMMUTABLE: Set only once at creation
-        string corePersonality;
-        string learningStyle;
-        uint256 adaptability;
-        string moralAlignment;
-        uint256 experienceLevel;
-        uint256 lastUpdated;
+        string name;               // IMMUTABLE (e.g., "Wanda")
+        string description;        // IMMUTABLE
+        string modelPath;          // IMMUTABLE
+        string startingPrompt;     // IMMUTABLE
+        string personality;        // Mutable (e.g., "mystical, wise")
+        string attributes;         // Mutable, comma-separated (e.g., "Mystical,Wise")
+        uint256 experienceLevel;   // Mutable
+        uint256 lastUpdated;       // Mutable
     }
     
     mapping(string => NPCTraits) public npcTraits;
     mapping(string => bool) public npcExists;
     
-    event NPCCreated(string indexed npcId, string coreStatement);
-    event TraitsUpdated(string indexed npcId, uint256 adaptability, uint256 timestamp);
+    event NPCCreated(
+        string indexed npcId,
+        string name,
+        string description,
+        string modelPath,
+        string startingPrompt
+    );
     
-    // ✅ CREATE NPC: Sets coreStatement (IMMUTABLE)
+    event TraitsUpdated(string indexed npcId, uint256 experienceLevel, uint256 timestamp);
+    
+    // ✅ CREATE NPC: Set immutable fields
     function createNPC(
         string memory npcId,
-        string memory coreStatement,  // ← Set once, never changed
-        string memory corePersonality,
-        string memory learningStyle,
-        uint256 adaptability,
-        string memory moralAlignment
+        string memory name,
+        string memory description,
+        string memory modelPath,
+        string memory startingPrompt,
+        string memory personality,
+        string memory attributes
     ) external {
         require(!npcExists[npcId], "NPC already exists");
         
         npcTraits[npcId] = NPCTraits(
-            coreStatement,           // ← IMMUTABLE
-            corePersonality,
-            learningStyle,
-            adaptability,
-            moralAlignment,
-            1,                       // experienceLevel starts at 1
+            name,
+            description,
+            modelPath,
+            startingPrompt,
+            personality,
+            attributes,
+            1, // Initial experienceLevel
             block.timestamp
         );
         
         npcExists[npcId] = true;
-        emit NPCCreated(npcId, coreStatement);
+        emit NPCCreated(npcId, name, description, modelPath, startingPrompt);
     }
     
-    // ✅ UPDATE TRAITS: Cannot change coreStatement
+    // ✅ UPDATE TRAITS: Modify mutable fields
     function updateTraits(
         string memory npcId,
-        string memory corePersonality,
-        string memory learningStyle,
-        uint256 adaptability,
-        string memory moralAlignment,
+        string memory personality,
+        string memory attributes,
         uint256 experienceLevel
     ) external {
         require(npcExists[npcId], "NPC does not exist");
         
-        // ⚠️ Notice: coreStatement is NOT included - it stays immutable
-        npcTraits[npcId].corePersonality = corePersonality;
-        npcTraits[npcId].learningStyle = learningStyle;
-        npcTraits[npcId].adaptability = adaptability;
-        npcTraits[npcId].moralAlignment = moralAlignment;
-        npcTraits[npcId].experienceLevel = experienceLevel;
-        npcTraits[npcId].lastUpdated = block.timestamp;
+        NPCTraits storage traits = npcTraits[npcId];
+        traits.personality = personality;
+        traits.attributes = attributes;
+        traits.experienceLevel = experienceLevel;
+        traits.lastUpdated = block.timestamp;
         
-        emit TraitsUpdated(npcId, adaptability, block.timestamp);
+        emit TraitsUpdated(npcId, experienceLevel, block.timestamp);
     }
     
-    // ✅ GET TRAITS: Returns all traits including immutable coreStatement
+    // ✅ GET TRAITS: Retrieve all traits
     function getTraits(string memory npcId) external view returns (NPCTraits memory) {
         require(npcExists[npcId], "NPC does not exist");
         return npcTraits[npcId];

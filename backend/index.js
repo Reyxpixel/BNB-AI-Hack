@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { Web3 } = require('web3');
-const { GreenfieldSDK } = require('@bnb-chain/greenfield-sdk');
+const { Client } = require('@bnb-chain/greenfield-js-sdk');
 const NPC = require('./npc');
 const llmClient = require('./llmclient');
 const crypto = require('crypto');
@@ -15,11 +15,10 @@ app.use(express.json());
 
 // Blockchain Setup
 const web3 = new Web3(process.env.BSC_RPC_URL);
-const greenfield = new GreenfieldSDK({
-  endpoint: process.env.GREENFIELD_ENDPOINT,
-  chainId: process.env.GREENFIELD_CHAIN_ID
-});
-
+const greenfield = Client.create(
+  'https://gnfd-testnet-fullnode-tendermint-ap.bnbchain.org', // Greenfield RPC endpoint
+  '5600' // Chain ID for testnet
+);
 const contractABI = require('./abis/NPCTraitsABI.json');
 const contractAddress = process.env.BSC_CONTRACT_ADDRESS;
 const npcContract = new web3.eth.Contract(contractABI, contractAddress);
@@ -72,17 +71,19 @@ app.get('/traits/:npcId', async (req, res) => {
   try {
     const traits = await npcContract.methods.getTraits(req.params.npcId).call();
     res.json({
-      corePersonality: traits.corePersonality || 'Neutral',
-      learningStyle: traits.learningStyle || 'Adaptive',
-      adaptability: parseInt(traits.adaptability) || 50,
-      moralAlignment: traits.moralAlignment || 'Neutral',
-      experienceLevel: parseInt(traits.experienceLevel) || 1
+      name: traits.name || req.params.npcId,
+      description: traits.description || '',
+      modelPath: traits.modelPath || '',
+      startingPrompt: traits.startingPrompt || '',
+      personality: traits.personality || '',
+      attributes: traits.attributes ? traits.attributes.split(',') : []
     });
   } catch (error) {
     console.error('Traits fetch error:', error);
     res.status(500).json({ error: error.message });
   }
 });
+
 
 // Store memory endpoint
 app.post('/storeMemory', async (req, res) => {

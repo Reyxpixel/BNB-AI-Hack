@@ -1,5 +1,5 @@
 const { Web3 } = require('web3');
-const { GreenfieldSDK } = require('@bnb-chain/greenfield-sdk');
+const { GreenfieldSDK } = require('@bnb-chain/greenfield-js-sdk');
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
@@ -45,6 +45,7 @@ class NPC {
         interactionHistory: this.interactionHistory,
         lastUpdated: new Date().toISOString()
       };
+
       fs.writeFileSync(this.memoryPath, JSON.stringify(data, null, 2));
     } catch (error) {
       console.error(`Failed to save local memory for ${this.id}:`, error);
@@ -57,14 +58,14 @@ class NPC {
       const traits = await this.contract.methods.getTraits(this.id).call();
       
       this.permanentTraits = {
-        corePersonality: traits.corePersonality || 'Neutral',
-        learningStyle: traits.learningStyle || 'Adaptive',
-        adaptability: parseInt(traits.adaptability) || 50,
-        moralAlignment: traits.moralAlignment || 'Neutral',
-        experienceLevel: parseInt(traits.experienceLevel) || 1,
-        lastUpdated: parseInt(traits.lastUpdated) || Date.now()
+        name: traits.name || this.id,
+        description: traits.description || '',
+        modelPath: traits.modelPath || '',
+        startingPrompt: traits.startingPrompt || '',
+        personality: traits.personality || '',
+        attributes: traits.attributes ? traits.attributes.split(',') : []
       };
-      
+
       console.log(`[${this.id}] Synced traits:`, this.permanentTraits);
       this.saveLocalMemory();
       
