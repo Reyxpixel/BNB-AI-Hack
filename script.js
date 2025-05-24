@@ -1,3 +1,6 @@
+// Import Three.js library
+const THREE = window.THREE;
+
 // NPC Dictionary - Add your custom NPCs here
 const npcDatabase = [
     {
@@ -57,11 +60,11 @@ function initThreeJS() {
     
     // Scene setup
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xf0f2f5);
+    scene.background = new THREE.Color(0x0a0a1a);
     
     // Camera setup
     camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
-    camera.position.set(0, 1, 3);
+    camera.position.set(0, 0.5, 4);
     
     // Renderer setup
     renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
@@ -176,7 +179,7 @@ function loadPlaceholderModel(npc) {
     }
     
     currentModel = new THREE.Mesh(geometry, material);
-    currentModel.position.y = 0;
+    currentModel.position.y = 0.5;
     currentModel.castShadow = true;
     scene.add(currentModel);
     
@@ -184,7 +187,7 @@ function loadPlaceholderModel(npc) {
     const baseGeometry = new THREE.CylinderGeometry(1.2, 1.2, 0.1, 16);
     const baseMaterial = new THREE.MeshLambertMaterial({ color: 0xeceff1 });
     const base = new THREE.Mesh(baseGeometry, baseMaterial);
-    base.position.y = -1.05;
+    base.position.y = -0.55;
     base.receiveShadow = true;
     scene.add(base);
 }
@@ -217,7 +220,6 @@ function initEventListeners() {
         }
     });
     
-    chatInput.addEventListener('input', updateCharCounter);
     clearBtn.addEventListener('click', clearChat);
 }
 
@@ -231,7 +233,6 @@ function sendMessage() {
     // Add user message
     addMessage(message, 'user');
     input.value = '';
-    updateCharCounter();
     
     // Simulate NPC response
     setTimeout(() => {
@@ -311,15 +312,7 @@ function clearChat() {
 
 // Update character counter
 function updateCharCounter() {
-    const input = document.getElementById('chat-input');
-    const counter = document.getElementById('char-count');
-    counter.textContent = input.value.length;
-    
-    if (input.value.length > 450) {
-        counter.style.color = '#ff6b6b';
-    } else {
-        counter.style.color = '#999';
-    }
+    // Remove this entire function content - it's no longer needed
 }
 
 // Update NPC counter
