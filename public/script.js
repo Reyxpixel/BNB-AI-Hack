@@ -1,6 +1,7 @@
 // Import Three.js library
 const THREE = window.THREE
 
+
 // User attributes system
 const userAttributes = {
   wordAttributes: ["Curious", "Analytical", "Creative", "Persistent"],
@@ -498,56 +499,100 @@ function loadModel(npc) {
 }
 
 // Event listeners
+// Update the event listeners in initEventListeners function
 function initEventListeners() {
-  // NPC navigation
-  document.getElementById("prev-npc").addEventListener("click", () => {
-    const newIndex = (currentNPCIndex - 1 + npcDatabase.length) % npcDatabase.length
-    loadNPC(newIndex)
-    updateNPCCounter()
-  })
-
-  document.getElementById("next-npc").addEventListener("click", () => {
-    const newIndex = (currentNPCIndex + 1) % npcDatabase.length
-    loadNPC(newIndex)
-    updateNPCCounter()
-  })
-
-  // Chat functionality
-  const chatInput = document.getElementById("chat-input")
-  const sendBtn = document.getElementById("send-btn")
-  const clearBtn = document.getElementById("clear-chat")
-
-  sendBtn.addEventListener("click", sendMessage)
-  chatInput.addEventListener("keypress", (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault()
-      sendMessage()
-    }
-  })
-
-  clearBtn.addEventListener("click", clearChat)
+    // Send message on Enter key
+    document.getElementById("chat-input").addEventListener("keypress", async (e) => {
+        if (e.key === "Enter") {
+            await sendMessage()
+        }
+    })
+    
+    // Send message on button click
+    document.getElementById("send-btn").addEventListener("click", async () => {
+        await sendMessage()
+    })
+    
+    // Other existing event listeners...
+    document.getElementById("prev-npc").addEventListener("click", () => {
+        if (currentNPCIndex > 0) {
+            loadNPC(currentNPCIndex - 1)
+            clearChat()
+        }
+    })
+    
+    document.getElementById("next-npc").addEventListener("click", () => {
+        if (currentNPCIndex < npcDatabase.length - 1) {
+            loadNPC(currentNPCIndex + 1)
+            clearChat()
+        }
+    })
+    
+    document.getElementById("clear-chat").addEventListener("click", clearChat)
 }
+
 
 // Send chat message
-function sendMessage() {
-  const input = document.getElementById("chat-input")
-  const message = input.value.trim()
-
-  if (!message) return
-
-  // Add user message
-  addMessage(message, "user")
-  input.value = ""
-
-  // Simulate NPC response
-  setTimeout(
-    () => {
-      const npcResponse = generateNPCResponse(message)
-      addMessage(npcResponse, "npc")
-    },
-    1000 + Math.random() * 2000,
-  )
+// Update the sendMessage function to handle async AI responses
+async function sendMessage() {
+    const chatInput = document.getElementById("chat-input")
+    const message = chatInput.value.trim()
+    
+    if (message === "") return
+    
+    // Add user message to chat
+    addMessageToChat(message, "user")
+    chatInput.value = ""
+    
+    // Show typing indicator
+    showTypingIndicator()
+    
+    try {
+        // Generate AI response
+        const aiResponse = await generateNPCResponse(message)
+        
+        // Remove typing indicator and add AI response
+        hideTypingIndicator()
+        addMessageToChat(aiResponse, "npc")
+        
+    } catch (error) {
+        console.error('Error generating response:', error)
+        hideTypingIndicator()
+        addMessageToChat("I apologize, but I'm having trouble responding right now.", "npc")
+    }
 }
+
+// Enhanced addMessageToChat function with better history management
+function addMessageToChat(content, sender) {
+    const chatContent = document.querySelector(".chat-content")
+    const messageDiv = document.createElement("div")
+    messageDiv.className = `message ${sender}-message`
+    
+    const messageContent = document.createElement("div")
+    messageContent.className = "message-content"
+    messageContent.innerHTML = `${content}`
+    messageDiv.appendChild(messageContent)
+    
+    chatContent.appendChild(messageDiv)
+    chatContent.scrollTop = chatContent.scrollHeight
+    
+    // Add to history with timestamp and enhanced metadata
+    const historyEntry = {
+        content,
+        sender,
+        timestamp: Date.now(),
+        npcId: npcDatabase[currentNPCIndex].name,
+        npcIndex: currentNPCIndex
+    }
+    
+    chatHistory.push(historyEntry)
+    
+    // Keep only last 20 messages to prevent memory issues
+    if (chatHistory.length > 20) {
+        chatHistory = chatHistory.slice(-20)
+    }
+}
+
 
 // Add message to chat with improved bubble sizing
 function addMessage(content, sender) {
@@ -569,50 +614,103 @@ function addMessage(content, sender) {
   chatHistory.push({ content, sender, timestamp: Date.now() })
 }
 
-// Generate NPC response (customized per NPC)
-function generateNPCResponse(userMessage) {
-  const npc = npcDatabase[currentNPCIndex]
-  const responses = {
-    0: [
-      // Bionic Mage responses
-      "Technology and magic are two sides of the same coin. What would you fuse together?",
-      "Let me calculate the odds... and consult the runes. Fascinating possibilities emerge.",
-      "Your curiosity is the catalyst for innovation. Shall we experiment further?",
-      "In my world, logic and mystery walk hand in hand. Which path do you choose?"
-    ],
-    1: [
-      // Captain Rex responses
-      "Copy that. I expect precision and clarity—just like on the bridge.",
-      "Mission parameters received. Let's execute with zero margin for error.",
-      "Stay sharp. The galaxy doesn't wait for the indecisive.",
-      "Good initiative. That's what I like to see in my crew."
-    ],
-    2: [
-      // Business Man responses
-      "I see an opportunity in every challenge. Let's talk numbers.",
-      "Negotiation is an art—what's your opening offer?",
-      "In business, timing is everything. Is this urgent or strategic?",
-      "I appreciate directness. Let's make this deal mutually beneficial."
-    ],
-    3: [
-      // Deadlock responses
-      "Heh, you think you can outsmart me? Try again, rookie.",
-      "Every system has a backdoor—if you know where to look.",
-      "You talk a good game, but can you walk the digital walk?",
-      "Nice move, but I've already anticipated your next three steps."
-    ],
-    4: [
-      // Street Rogue responses
-      "Keep your voice down—walls have ears in this part of town.",
-      "You got guts, showing up here. What's your angle?",
-      "I can get you what you need—for the right price.",
-      "Stick with me, and you might just make it out in one piece."
-    ],
-  }
-
-  const npcResponses = responses[currentNPCIndex] || ["Interesting...", "Tell me more.", "I see..."]
-  return npcResponses[Math.floor(Math.random() * npcResponses.length)]
+// Add typing indicator functionality
+function showTypingIndicator() {
+    const chatContent = document.querySelector(".chat-content")
+    const typingDiv = document.createElement("div")
+    typingDiv.className = "message npc-message typing-indicator"
+    typingDiv.id = "typing-indicator"
+    typingDiv.innerHTML = `
+        <div class="message-content">
+            <span class="typing-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </span>
+            <em>${npcDatabase[currentNPCIndex].name} is thinking...</em>
+        </div>
+    `
+    chatContent.appendChild(typingDiv)
+    chatContent.scrollTop = chatContent.scrollHeight
 }
+
+function hideTypingIndicator() {
+    const typingIndicator = document.getElementById("typing-indicator")
+    if (typingIndicator) {
+        typingIndicator.remove()
+    }
+}
+
+
+
+
+// Generate NPC response (customized per NPC)
+// Replace the existing generateNPCResponse function with this AI-powered version
+async function generateNPCResponse(userMessage) {
+    const npc = npcDatabase[currentNPCIndex]
+    
+    try {
+        // Prepare the conversation history for the API
+        const messages = [
+            {
+                role: "system",
+                content: `You are ${npc.name}. ${npc.description} Your personality: ${npc.personality}. Starting context: ${npc.startingPrompt}`
+            },
+            // Add recent chat history for context (ensure chatHistory exists)
+            ...(chatHistory || []).slice(-5).map(msg => ({
+                role: msg.sender === 'user' ? 'user' : 'assistant',
+                content: msg.content
+            })),
+            {
+                role: "user",
+                content: userMessage
+            }
+        ]
+
+        console.log('Sending API request to:', '/api/chat')
+        console.log('Request payload:', { npcId: npc.name.toLowerCase().replace(/\s+/g, '_'), messages })
+
+        // Call your backend API endpoint
+        const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                npcId: npc.name.toLowerCase().replace(/\s+/g, '_'),
+                messages: messages
+            })
+        })
+
+        console.log('Response status:', response.status)
+        console.log('Response headers:', response.headers)
+
+        if (!response.ok) {
+            const errorText = await response.text()
+            console.error('API Error Response:', errorText)
+            throw new Error(`API request failed: ${response.status} - ${errorText}`)
+        }
+
+        const data = await response.json()
+        console.log('API Response data:', data)
+        
+        return data.reply || data.message || "I'm having trouble processing that right now."
+        
+    } catch (error) {
+        console.error('AI Response Error:', error)
+        
+        // More specific error messages based on error type
+        if (error.name === 'TypeError' && error.message.includes('fetch')) {
+            return "I'm having trouble connecting to my AI brain. Please check your connection."
+        } else if (error.message.includes('404')) {
+            return "My AI service seems to be unavailable. Please try again later."
+        } else {
+            return "I'm experiencing some technical difficulties. Please try again."
+        }
+    }
+}
+
+
 
 // Clear chat
 function clearChat() {

@@ -6,7 +6,7 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
-  background: linear-gradient(rgba(0, 0, 0, 0.359), rgba(0, 0, 0, 0.346)), url('background.jpg') no-repeat center center fixed;
+  background: linear-gradient(rgba(0, 0, 0, 0.359), rgba(0, 0, 0, 0.346)), url('/background.jpg') no-repeat center center fixed;
   background-size: cover;
   min-height: 100vh;
   overflow: hidden;
@@ -319,6 +319,30 @@ body {
   gap: 28px;
   padding: 28px 40px;
 }
+
+.typing-indicator .typing-dots {
+    display: inline-block;
+    margin-right: 8px;
+}
+
+.typing-dots span {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #666;
+    margin: 0 1px;
+    animation: typing 1.4s infinite ease-in-out;
+}
+
+.typing-dots span:nth-child(1) { animation-delay: -0.32s; }
+.typing-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes typing {
+    0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+    40% { transform: scale(1); opacity: 1; }
+}
+
 
 /* Model Section */
 .model-section {
