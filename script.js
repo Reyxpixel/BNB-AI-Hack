@@ -6,7 +6,7 @@ const npcDatabase = [
     {
         name: "Aria the Mage",
         description: "A wise and powerful sorceress who has studied the arcane arts for centuries. She speaks in riddles and offers mystical guidance.",
-        modelPath: "models/aria_mage.glb", // Replace with your actual model path
+        modelPath: "models/aria_mage.glb",
         startingPrompt: "Greetings, traveler. I sense great potential within you. The ancient magics whisper of your arrival. What knowledge do you seek from the ethereal realms?",
         personality: "mystical, wise, speaks in an archaic manner"
     },
@@ -114,32 +114,44 @@ function onWindowResize() {
     renderer.setSize(container.clientWidth, container.clientHeight);
 }
 
-// Load NPC model and data
+// Load NPC model and data with smooth transitions
 function loadNPC(index) {
     if (isLoading) return;
     
     isLoading = true;
-    showLoading();
     
     const npc = npcDatabase[index];
     currentNPCIndex = index;
     
-    // Update UI with NPC info
-    document.getElementById('npc-name').textContent = npc.name;
-    document.getElementById('npc-description').textContent = npc.description;
-    document.getElementById('chat-npc-name').textContent = npc.name;
-    document.getElementById('welcome-text').textContent = npc.startingPrompt;
+    // Start smooth transition
+    const modelHeader = document.getElementById('model-header');
+    const canvas = document.getElementById('three-canvas');
     
-    // Clear chat history
-    clearChat();
-    
-    // Load 3D model (placeholder for now - replace with actual GLTF loader)
-    loadPlaceholderModel(npc);
+    // Fade out current content
+    modelHeader.classList.add('fade-transition');
+    canvas.classList.add('fade-transition');
     
     setTimeout(() => {
-        hideLoading();
-        isLoading = false;
-    }, 1000);
+        // Update UI with NPC info
+        document.getElementById('npc-name').textContent = npc.name;
+        document.getElementById('npc-description').textContent = npc.description;
+        document.getElementById('chat-npc-name').textContent = npc.name;
+        document.getElementById('welcome-text').textContent = npc.startingPrompt;
+        
+        // Clear chat history
+        clearChat();
+        
+        // Load 3D model
+        loadPlaceholderModel(npc);
+        
+        // Fade in new content
+        setTimeout(() => {
+            modelHeader.classList.add('visible');
+            canvas.classList.add('visible');
+            isLoading = false;
+        }, 100);
+        
+    }, 300);
 }
 
 // Load placeholder model (replace this with actual GLTF loading)
@@ -241,9 +253,9 @@ function sendMessage() {
     }, 1000 + Math.random() * 2000);
 }
 
-// Add message to chat
+// Add message to chat with improved bubble sizing
 function addMessage(content, sender) {
-    const chatContainer = document.getElementById('chat-container');
+    const chatContent = document.querySelector('.chat-content');
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${sender}-message`;
     
@@ -252,10 +264,10 @@ function addMessage(content, sender) {
     messageContent.innerHTML = `<p>${content}</p>`;
     
     messageDiv.appendChild(messageContent);
-    chatContainer.appendChild(messageDiv);
+    chatContent.appendChild(messageDiv);
     
-    // Scroll to bottom
-    chatContainer.scrollTop = chatContainer.scrollHeight;
+    // Scroll to bottom smoothly
+    chatContent.scrollTop = chatContent.scrollHeight;
     
     // Add to history
     chatHistory.push({ content, sender, timestamp: Date.now() });
@@ -303,31 +315,17 @@ function generateNPCResponse(userMessage) {
 
 // Clear chat
 function clearChat() {
-    const chatContainer = document.getElementById('chat-container');
-    const welcomeMessage = chatContainer.querySelector('.welcome-message');
-    chatContainer.innerHTML = '';
-    chatContainer.appendChild(welcomeMessage);
+    const chatContent = document.querySelector('.chat-content');
+    const welcomeMessage = chatContent.querySelector('.welcome-message');
+    chatContent.innerHTML = '';
+    chatContent.appendChild(welcomeMessage);
     chatHistory = [];
-}
-
-// Update character counter
-function updateCharCounter() {
-    // Remove this entire function content - it's no longer needed
 }
 
 // Update NPC counter
 function updateNPCCounter() {
     document.getElementById('current-npc').textContent = currentNPCIndex + 1;
     document.getElementById('total-npcs').textContent = npcDatabase.length;
-}
-
-// Loading overlay functions
-function showLoading() {
-    document.getElementById('loading-overlay').classList.add('show');
-}
-
-function hideLoading() {
-    document.getElementById('loading-overlay').classList.remove('show');
 }
 
 // Utility function to add more NPCs dynamically
