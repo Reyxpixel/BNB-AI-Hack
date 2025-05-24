@@ -16,7 +16,7 @@ app.use(express.json());
 // Blockchain Setup
 const web3 = new Web3(process.env.BSC_RPC_URL);
 const greenfield = Client.create(
-  'https://gnfd-testnet-fullnode-tendermint-ap.bnbchain.org', // Greenfield RPC endpoint
+  'https://gnfd-testnet-fullnode-tendermint-us.bnbchain.org:443', // Greenfield RPC endpoint
   '5600' // Chain ID for testnet
 );
 const contractABI = require('./abis/NPCTraitsABI.json');
@@ -93,21 +93,44 @@ app.post('/storeMemory', async (req, res) => {
       return res.status(400).json({ error: 'Missing npcId or memory' });
     }
 
+    const bucketName = process.env.GREENFIELD_BUCKET;
     const objectName = `memory/${npcId}/${Date.now()}.json`;
-    
-    await greenfield.object.createObject({
-      bucketName: process.env.GREENFIELD_BUCKET,
-      objectName,
-      body: JSON.stringify({
-        npcId,
-        memory,
-        timestamp: new Date().toISOString()
-      }),
-      visibility: 'PRIVATE'
+    const bodyData = JSON.stringify({
+      npcId,
+      memory,
+      timestamp: new Date().toISOString()
     });
 
+    // --- Step 1: Check if bucket exists ---
+    console.log('Checking if bucket exists:', bucketName);
+    const buckets = await greenfield.bucket.listBuckets();
+    const exists = buckets.some(b => b.bucketName === bucketName);
+    if (!exists) {
+      return res.status(400).json({ error: `Bucket ${bucketName} does not exist.` });
+    }
+
+    // --- Step 2: Create object metadata ---
+    console.log('Creating object metadata for:', objectName);
+    const createResult = await greenfield.object.createObject({
+      bucketName,
+      objectName,
+      body: bodyData,
+      visibility: 'PRIVATE'
+    });
+    console.log('createObject result:', createResult);
+
+    // --- Step 3: Upload the actual object data ---
+    console.log('Uploading object data...');
+    const putResult = await greenfield.object.putObject({
+      bucketName,
+      objectName,
+      body: bodyData
+    });
+    console.log('putObject result:', putResult);
+
+    // --- Step 4: Store hash on chain as before ---
     const memoryHash = crypto.createHash('sha256')
-      .update(JSON.stringify(memory))
+      .update(bodyData)
       .digest('hex');
 
     await npcContract.methods
@@ -117,7 +140,7 @@ app.post('/storeMemory', async (req, res) => {
         gas: 3000000
       });
 
-    res.json({ 
+    res.json({
       message: 'Memory stored successfully',
       objectName,
       hash: memoryHash
@@ -125,12 +148,13 @@ app.post('/storeMemory', async (req, res) => {
 
   } catch (error) {
     console.error('Memory storage error:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Memory storage failed',
-      details: error.message 
+      details: error.message
     });
   }
 });
+
 
 // Fetch memory endpoint
 app.get('/fetchMemory/:npcId', async (req, res) => {

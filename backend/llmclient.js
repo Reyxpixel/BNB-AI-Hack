@@ -24,15 +24,15 @@ async function groqApiCall(messages, model = 'llama-3.3-70b-versatile') {
 }
 
 async function classifyInput(message) {
-  const systemPrompt = `Analyze the user message and return JSON classification:
-  {
-    "permanentTraits": ["trait1:value", "trait2:value"],
-    "temporaryTraits": ["mood:value", "focus:value"],
-    "responseType": "Guidance/Info/Support/Casual"
-  }
+  const systemPrompt = `You are ${context.permanentTraits.name}.
+  Description: ${context.permanentTraits.description}
+  Personality: ${context.permanentTraits.personality}
+  Attributes: ${context.permanentTraits.attributes.join(', ')}
+  Model Path: ${context.permanentTraits.modelPath}
+  Starting Prompt: ${context.permanentTraits.startingPrompt}
   
-  Permanent traits are lasting personality changes.
-  Temporary traits are session-specific context.`;
+  Respond in character, using your unique voice and knowledge.`;
+
   
   try {
     const result = await groqApiCall([
