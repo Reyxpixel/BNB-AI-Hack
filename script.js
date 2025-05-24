@@ -11,6 +11,7 @@ const npcDatabase = [
     startingPrompt:
       "Greetings, traveler. I sense great potential within you. The ancient magics whisper of your arrival. What knowledge do you seek from the ethereal realms?",
     personality: "mystical, wise, speaks in an archaic manner",
+    attributes: ["Mystical", "Wise", "Ancient", "Powerful"]
   },
   {
     name: "Captain Rex",
@@ -20,6 +21,7 @@ const npcDatabase = [
     startingPrompt:
       "Soldier! Good to see you made it. We've got a situation that needs handling. What's your status and how can I assist with the mission?",
     personality: "military, direct, tactical, uses military terminology",
+    attributes: ["Tactical", "Brave", "Leader", "Combat"]
   },
   {
     name: "Luna the Healer",
@@ -29,6 +31,7 @@ const npcDatabase = [
     startingPrompt:
       "Welcome, dear friend. I can sense you carry burdens upon your heart. Please, sit and tell me what troubles you. Perhaps I can offer some comfort or guidance.",
     personality: "compassionate, gentle, caring, speaks softly",
+    attributes: ["Healing", "Kind", "Gentle", "Sacred"]
   },
   {
     name: "Zyx the Inventor",
@@ -38,6 +41,7 @@ const npcDatabase = [
     startingPrompt:
       "Oh! A visitor! Perfect timing! I just finished my latest contraption - a quantum flux capacitor! Well, it doesn't work yet, but that's beside the point. What brings you to my workshop?",
     personality: "eccentric, enthusiastic, scientific, uses technical jargon",
+    attributes: ["Genius", "Creative", "Tech", "Eccentric"]
   },
   {
     name: "Shadow the Rogue",
@@ -47,15 +51,14 @@ const npcDatabase = [
     startingPrompt:
       "*steps out from the shadows* Well, well... what do we have here? You don't look like you're from around these parts. Looking for information, or perhaps something more... valuable?",
     personality: "mysterious, cunning, street-smart, speaks in whispers",
+    attributes: ["Stealth", "Cunning", "Agile", "Shadow"]
   },
 ]
 
 // Global variables
-let scene,
-  camera,
-  renderer,
-  currentModel,
-  currentNPCIndex = 0
+let scene, camera, renderer, controls
+let currentModel
+let currentNPCIndex = 0
 let isLoading = false
 let chatHistory = []
 let loader // GLTF loader
@@ -75,33 +78,52 @@ function initThreeJS() {
 
   // Scene setup
   scene = new THREE.Scene()
-  scene.background = new THREE.Color(0x0a0a1a)
+  scene.background = new THREE.Color(0x222222)
 
   // Camera setup
   camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000)
-  camera.position.set(0, 0.5, 4)
+  camera.position.set(0, 1, 4)
 
   // Renderer setup
   renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true })
   renderer.setSize(container.clientWidth, container.clientHeight)
   renderer.shadowMap.enabled = true
   renderer.shadowMap.type = THREE.PCFSoftShadowMap
+  renderer.outputEncoding = THREE.sRGBEncoding
+  renderer.toneMapping = THREE.ACESFilmicToneMapping
+  renderer.toneMappingExposure = 1
 
-  // Initialize GLTF loader properly
+  // Controls setup
+  if (typeof THREE.OrbitControls !== "undefined") {
+    controls = new THREE.OrbitControls(camera, canvas)
+    controls.enableDamping = true
+    controls.dampingFactor = 0.05
+    controls.enableZoom = true
+    controls.enablePan = false
+    controls.maxPolarAngle = Math.PI / 2
+    controls.minDistance = 2
+    controls.maxDistance = 8
+  }
+
+  // Initialize GLTF loader
   if (typeof THREE.GLTFLoader !== "undefined") {
     loader = new THREE.GLTFLoader()
+    console.log("✅ GLTFLoader initialized successfully")
   } else {
-    console.warn("GLTFLoader not available, using placeholder models only")
+    console.error("❌ GLTFLoader not available")
+    updateModelStatus("GLTFLoader not available")
     loader = null
   }
 
-  // Lighting
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.6)
+  // Lighting setup
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.4)
   scene.add(ambientLight)
 
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8)
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 1)
   directionalLight.position.set(5, 5, 5)
   directionalLight.castShadow = true
+  directionalLight.shadow.mapSize.width = 2048
+  directionalLight.shadow.mapSize.height = 2048
   scene.add(directionalLight)
 
   const fillLight = new THREE.DirectionalLight(0xffffff, 0.3)
@@ -119,8 +141,13 @@ function initThreeJS() {
 function animate() {
   requestAnimationFrame(animate)
 
-  // Rotate the current model
-  if (currentModel) {
+  // Update controls
+  if (controls) {
+    controls.update()
+  }
+
+  // Auto-rotate the model if no user interaction
+  if (currentModel && (!controls || !controls.enabled)) {
     currentModel.rotation.y += 0.005
   }
 
@@ -137,21 +164,30 @@ function onWindowResize() {
   renderer.setSize(container.clientWidth, container.clientHeight)
 }
 
+// Update model status display
+function updateModelStatus(message) {
+  const statusElement = document.getElementById("model-status")
+  if (statusElement) {
+    statusElement.textContent = message
+  }
+}
+
 // Load NPC model and data with smooth transitions
 function loadNPC(index) {
   if (isLoading) return
 
   isLoading = true
+  updateModelStatus("Loading NPC...")
 
   const npc = npcDatabase[index]
   currentNPCIndex = index
 
   // Start smooth transition
-  const modelHeader = document.getElementById("model-header")
+  const modelInfo = document.querySelector(".model-info")
   const canvas = document.getElementById("three-canvas")
 
   // Fade out current content
-  modelHeader.classList.add("fade-transition")
+  modelInfo.classList.add("fade-transition")
   canvas.classList.add("fade-transition")
 
   setTimeout(() => {
@@ -161,123 +197,115 @@ function loadNPC(index) {
     document.getElementById("chat-npc-name").textContent = npc.name
     document.getElementById("welcome-text").textContent = npc.startingPrompt
 
+    // Update attributes
+    const attributeElements = document.querySelectorAll('.attribute-tag')
+    npc.attributes.forEach((attr, i) => {
+      if (attributeElements[i]) {
+        attributeElements[i].textContent = attr
+      }
+    })
+
     // Clear chat history
     clearChat()
 
-    // Load 3D model (check models folder first, fallback to shapes)
-    loadModelWithFallback(npc)
+    // Load 3D model
+    loadModel(npc)
 
     // Fade in new content
     setTimeout(() => {
-      modelHeader.classList.add("visible")
+      modelInfo.classList.add("visible")
       canvas.classList.add("visible")
       isLoading = false
     }, 100)
   }, 300)
 }
 
-// Load model with fallback to placeholder shapes
-function loadModelWithFallback(npc) {
+// Load 3D model
+function loadModel(npc) {
   // Remove current model and base
   if (currentModel) {
     scene.remove(currentModel)
+    currentModel = null
   }
+  
   // Remove any existing base
   const existingBase = scene.getObjectByName("modelBase")
   if (existingBase) {
     scene.remove(existingBase)
   }
 
-  // Check if GLTF loader is available and try to load model
-  if (loader) {
-    console.log(`Attempting to load model: ${npc.modelPath}`)
+  if (!loader) {
+    updateModelStatus("GLTFLoader not available")
+    console.error("❌ GLTFLoader not available")
+    return
+  }
 
-    loader.load(
-      npc.modelPath,
-      (gltf) => {
-        // Success - model loaded from models folder
-        console.log(`✅ Successfully loaded model: ${npc.modelPath}`)
-        currentModel = gltf.scene
+  updateModelStatus(`Loading ${npc.name}...`)
+  console.log(`🔄 Attempting to load model: ${npc.modelPath}`)
 
-        // Scale and position the model appropriately
-        const box = new THREE.Box3().setFromObject(currentModel)
-        const size = box.getSize(new THREE.Vector3())
-        const maxSize = Math.max(size.x, size.y, size.z)
-        const scale = 2 / maxSize // Scale to fit in a 2-unit space
+  loader.load(
+    npc.modelPath,
+    (gltf) => {
+      // Success - model loaded
+      console.log(`✅ Successfully loaded model: ${npc.modelPath}`)
+      updateModelStatus(`${npc.name} loaded successfully`)
+      
+      currentModel = gltf.scene
 
-        currentModel.scale.set(scale, scale, scale)
+      // Scale and position the model appropriately
+      const box = new THREE.Box3().setFromObject(currentModel)
+      const size = box.getSize(new THREE.Vector3())
+      const maxSize = Math.max(size.x, size.y, size.z)
+      const scale = 2 / maxSize // Scale to fit in a 2-unit space
 
-        // Center the model
-        const center = box.getCenter(new THREE.Vector3())
-        currentModel.position.set(-center.x * scale, -center.y * scale + 0.5, -center.z * scale)
+      currentModel.scale.set(scale, scale, scale)
 
-        // Enable shadows
-        currentModel.traverse((child) => {
-          if (child.isMesh) {
-            child.castShadow = true
-            child.receiveShadow = true
+      // Center the model
+      const center = box.getCenter(new THREE.Vector3())
+      currentModel.position.set(-center.x * scale, -center.y * scale, -center.z * scale)
+
+      // Enable shadows and improve materials
+      currentModel.traverse((child) => {
+        if (child.isMesh) {
+          child.castShadow = true
+          child.receiveShadow = true
+          
+          // Improve material properties
+          if (child.material) {
+            child.material.needsUpdate = true
           }
-        })
+        }
+      })
 
-        scene.add(currentModel)
-        addModelBase()
-      },
-      (progress) => {
-        // Loading progress
+      scene.add(currentModel)
+      addModelBase()
+
+      // Hide status after successful load
+      setTimeout(() => {
+        updateModelStatus("")
+      }, 2000)
+    },
+    (progress) => {
+      // Loading progress
+      if (progress.total > 0) {
         const percent = (progress.loaded / progress.total) * 100
-        console.log(`Loading progress: ${percent.toFixed(1)}%`)
-      },
-      (error) => {
-        // Error loading model - fallback to placeholder shapes
-        console.log(`❌ Failed to load model ${npc.modelPath}:`, error.message)
-        console.log(`🔄 Using placeholder shape instead`)
-        loadPlaceholderModel(npc)
-      },
-    )
-  } else {
-    // GLTF loader not available - use placeholder
-    console.log(`⚠️ GLTF Loader not available, using placeholder shape for ${npc.name}`)
-    loadPlaceholderModel(npc)
-  }
-}
-
-// Load placeholder model (fallback when GLTF models are not available)
-function loadPlaceholderModel(npc) {
-  // Create placeholder geometry based on NPC type
-  let geometry, material
-
-  switch (currentNPCIndex) {
-    case 0: // Mage
-      geometry = new THREE.ConeGeometry(0.5, 2, 8)
-      material = new THREE.MeshLambertMaterial({ color: 0x9c27b0 })
-      break
-    case 1: // Captain
-      geometry = new THREE.BoxGeometry(1, 2, 0.5)
-      material = new THREE.MeshLambertMaterial({ color: 0x2196f3 })
-      break
-    case 2: // Healer
-      geometry = new THREE.CylinderGeometry(0.5, 0.5, 2, 12)
-      material = new THREE.MeshLambertMaterial({ color: 0x4caf50 })
-      break
-    case 3: // Inventor
-      geometry = new THREE.OctahedronGeometry(1)
-      material = new THREE.MeshLambertMaterial({ color: 0xff9800 })
-      break
-    case 4: // Rogue
-      geometry = new THREE.TetrahedronGeometry(1)
-      material = new THREE.MeshLambertMaterial({ color: 0x424242 })
-      break
-    default:
-      geometry = new THREE.SphereGeometry(1, 16, 16)
-      material = new THREE.MeshLambertMaterial({ color: 0x607d8b })
-  }
-
-  currentModel = new THREE.Mesh(geometry, material)
-  currentModel.position.y = 0.5
-  currentModel.castShadow = true
-  scene.add(currentModel)
-
-  addModelBase()
+        updateModelStatus(`Loading ${npc.name}... ${percent.toFixed(0)}%`)
+        console.log(`📊 Loading progress: ${percent.toFixed(1)}%`)
+      }
+    },
+    (error) => {
+      // Error loading model
+      console.error(`❌ Failed to load model ${npc.modelPath}:`, error)
+      updateModelStatus(`Failed to load ${npc.name} model`)
+      
+      // Show detailed error information
+      console.log("🔍 Troubleshooting tips:")
+      console.log("1. Check if the file exists at:", window.location.origin + "/" + npc.modelPath)
+      console.log("2. Ensure the file is a valid GLB/GLTF format")
+      console.log("3. Check browser console for CORS errors")
+      console.log("4. Verify file permissions and server configuration")
+    }
+  )
 }
 
 // Add a base platform for the model
@@ -286,7 +314,7 @@ function addModelBase() {
   const baseGeometry = new THREE.CylinderGeometry(1.2, 1.2, 0.1, 16)
   const baseMaterial = new THREE.MeshLambertMaterial({ color: 0xeceff1 })
   const base = new THREE.Mesh(baseGeometry, baseMaterial)
-  base.position.y = -0.55
+  base.position.y = -1
   base.receiveShadow = true
   base.name = "modelBase" // Name it so we can remove it later
   scene.add(base)
