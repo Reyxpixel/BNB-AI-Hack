@@ -6,7 +6,7 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
-  background: url('background.jpg') no-repeat center center fixed;
+  background: linear-gradient(rgba(0, 0, 0, 0.359), rgba(0, 0, 0, 0.346)), url('background.jpg') no-repeat center center fixed;
   background-size: cover;
   min-height: 100vh;
   overflow: hidden;
@@ -14,6 +14,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
 
 
 /* Header */
@@ -25,8 +26,8 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 0 40px;
-  background: rgba(0, 0, 0, 0.95);
-  backdrop-filter: blur(30px) saturate(180%);
+  background: rgba(21, 21, 21, 0.484);
+  backdrop-filter: blur(20px) saturate(180%);
   border-bottom: 1px solid rgba(255, 221, 51, 0.2);
   z-index: 100;
   box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(255, 221, 51, 0.08);
@@ -322,18 +323,18 @@ body {
 /* Model Section */
 .model-section {
   flex: 1;
-  background: rgba(0,0,0,0.8);
-  border: 1px solid rgba(255, 221, 51, 0.12);
+  background: rgba(35, 35, 35, 0.484);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
   border-radius: 28px;
   padding: 36px;
-  backdrop-filter: blur(40px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
   display: flex;
   flex-direction: column;
   box-shadow: 
     0 32px 64px rgba(0,0,0,0.6), 
     0 16px 32px rgba(0,0,0,0.4),
-    0 0 0 1px rgba(255, 221, 51, 0.02),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    0 0 0 1px rgba(255, 221, 51, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .model-content {
@@ -504,18 +505,18 @@ body {
 /* Chat Section */
 .chat-section {
   flex: 1;
-  background: rgba(0,0,0,0.8);
-  border: 1px solid rgba(255, 221, 51, 0.12);
+  background: rgba(35, 35, 35, 0.484);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
   border-radius: 28px;
-  padding: 36px;
-  backdrop-filter: blur(40px) saturate(180%);
+  padding: 30px;
+  backdrop-filter: blur(20px) saturate(180%);
   display: flex;
   flex-direction: column;
   box-shadow: 
     0 32px 64px rgba(0,0,0,0.6), 
     0 16px 32px rgba(0,0,0,0.4),
-    0 0 0 1px rgba(255, 221, 51, 0.02),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    0 0 0 1px rgba(255, 221, 51, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 .chat-header {
   display: flex;
@@ -576,7 +577,8 @@ body {
 }
 .chat-background-gradient {
   position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-  background: #222222;
+  background: rgba(45, 45, 45, 0.484);
+  backdrop-filter: blur(5px) saturate(100%);
   z-index: 1;
   pointer-events: none;
 }
@@ -602,7 +604,7 @@ body {
 .chat-content::-webkit-scrollbar { width: 4px; }
 .chat-content::-webkit-scrollbar-track { background: transparent; }
 .chat-content::-webkit-scrollbar-thumb {
-  background: rgba(255, 221, 51, 0.25);
+    background: rgba(35, 35, 35, 0.484);
   border-radius: 2px;
 }
 .chat-content::-webkit-scrollbar-thumb:hover {

@@ -15,14 +15,15 @@ const userAttributes = {
 // NPC Dictionary - Add your custom NPCs here
 const npcDatabase = [
   {
-    name: "Wanda",
+    name: "Junkie",
     description:
       "A wise and powerful sorceress who has studied the arcane arts for centuries. She speaks in riddles and offers mystical guidance.",
-    modelPath: "models/wanda.glb",
+    modelPath: "models/still_human.glb",
     startingPrompt:
       "Greetings, traveler. I sense great potential within you. The ancient magics whisper of your arrival. What knowledge do you seek from the ethereal realms?",
     personality: "mystical, wise, speaks in an archaic manner",
-    attributes: ["Mystical", "Wise", "Ancient", "Powerful"]
+    attributes: ["Mystical", "Wise", "Ancient", "Powerful"],
+    camera: { x: 0, y: 1.6, z: 6.5 }
   },
   {
     name: "Captain Rex",
@@ -32,37 +33,41 @@ const npcDatabase = [
     startingPrompt:
       "Soldier! Good to see you made it. We've got a situation that needs handling. What's your status and how can I assist with the mission?",
     personality: "military, direct, tactical, uses military terminology",
-    attributes: ["Tactical", "Brave", "Leader", "Combat"]
+    attributes: ["Tactical", "Brave", "Leader", "Combat"],
+    camera: { x: 0, y: 1.2, z: 7.5 }
   },
   {
     name: "Luna the Healer",
     description:
       "A gentle and compassionate cleric who dedicates her life to helping others. She radiates warmth and kindness.",
-    modelPath: "models/luna_healer.glb",
+    modelPath: "models/the_phantom_rogue.glb",
     startingPrompt:
       "Welcome, dear friend. I can sense you carry burdens upon your heart. Please, sit and tell me what troubles you. Perhaps I can offer some comfort or guidance.",
     personality: "compassionate, gentle, caring, speaks softly",
-    attributes: ["Healing", "Kind", "Gentle", "Sacred"]
+    attributes: ["Healing", "Kind", "Gentle", "Sacred"],
+    camera: { x: 0, y: 2.0, z: 6.0 }
   },
   {
     name: "Ash Ketchum",
     description:
       "An eccentric genius inventor who creates impossible gadgets. Always excited about new discoveries and innovations.",
-    modelPath: "models/ash.glb",
+    modelPath: "models/shadow_rogue.glb.",
     startingPrompt:
       "Oh! A visitor! Perfect timing! I just finished my latest contraption - a quantum flux capacitor! Well, it doesn't work yet, but that's beside the point. What brings you to my workshop?",
     personality: "eccentric, enthusiastic, scientific, uses technical jargon",
-    attributes: ["Genius", "Creative", "Tech", "Eccentric"]
+    attributes: ["Genius", "Creative", "Tech", "Eccentric"],
+    camera: { x: 0, y: 1.4, z: 5.8 }
   },
   {
     name: "Shadow the Rogue",
     description:
       "A mysterious thief with a heart of gold. Speaks in whispers and knows all the secrets of the underworld.",
-    modelPath: "models/shadow_rogue.glb",
+    modelPath: "models/hipster_bundle___free_fire.glb",
     startingPrompt:
       "*steps out from the shadows* Well, well... what do we have here? You don't look like you're from around these parts. Looking for information, or perhaps something more... valuable?",
     personality: "mysterious, cunning, street-smart, speaks in whispers",
-    attributes: ["Stealth", "Cunning", "Agile", "Shadow"]
+    attributes: ["Stealth", "Cunning", "Agile", "Shadow"],
+    camera: { x: 0.5, y: 1.6, z: 7.0 }
   },
 ]
 
@@ -73,7 +78,7 @@ let currentNPCIndex = 0
 let isLoading = false
 let chatHistory = []
 let loader // GLTF loader
-let modelRotationSpeed = 0.008 // Rotation speed for player select effect
+let modelRotationSpeed = 0.004 // Rotation speed for player select effect (halved)
 
 // Initialize the application
 document.addEventListener("DOMContentLoaded", () => {
@@ -169,7 +174,7 @@ function initThreeJS() {
 
   // Camera setup - positioned for optimal character viewing
   camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000)
-  camera.position.set(0, 1.6, 4.5) // Positioned to show head and torso
+  camera.position.set(0, 1.6, 6.5) // Default, will be overridden per NPC
 
   // Renderer setup
   renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true })
@@ -190,7 +195,7 @@ function initThreeJS() {
     controls.maxPolarAngle = Math.PI / 2.2 // Limit vertical rotation
     controls.minPolarAngle = Math.PI / 6   // Prevent looking too far up
     controls.minDistance = 2.5
-    controls.maxDistance = 8
+    controls.maxDistance = 12
     controls.target.set(0, 1.4, 0) // Look at upper body/head area
   }
 
@@ -353,6 +358,9 @@ function loadNPC(index) {
   const npc = npcDatabase[index]
   currentNPCIndex = index
 
+  // Set camera position for this NPC
+  setCameraForNPC(npc)
+
   // Start smooth transition
   const modelInfo = document.querySelector(".model-info")
   const canvas = document.getElementById("three-canvas")
@@ -389,6 +397,29 @@ function loadNPC(index) {
       isLoading = false
     }, 100)
   }, 300)
+}
+
+// Helper: set camera position for an NPC (x, y, z)
+function setCameraForNPC(npc) {
+  const cam = npc.camera || { x: 0, y: 1.6, z: 6.5 }
+  if (camera) {
+    camera.position.set(
+      typeof cam.x === "number" ? cam.x : 0,
+      typeof cam.y === "number" ? cam.y : 1.6,
+      typeof cam.z === "number" ? cam.z : 6.5
+    )
+    if (controls) controls.update()
+  }
+}
+
+// Allow changing camera position for the current NPC
+function setNPCCamera({ x, y, z }) {
+  const npc = npcDatabase[currentNPCIndex]
+  if (!npc.camera) npc.camera = { x: 0, y: 1.6, z: 6.5 }
+  if (typeof x === "number") npc.camera.x = x
+  if (typeof y === "number") npc.camera.y = y
+  if (typeof z === "number") npc.camera.z = z
+  setCameraForNPC(npc)
 }
 
 // Load 3D model with smart positioning
@@ -646,5 +677,6 @@ window.NPCChat = {
   getChatHistory: () => chatHistory,
   updateUserAttribute,
   removeUserAttribute,
-  getUserAttributes: () => userAttributes
+  getUserAttributes: () => userAttributes,
+  setNPCCamera // <--- Expose camera setter
 }
