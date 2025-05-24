@@ -4,10 +4,10 @@ const THREE = window.THREE
 // NPC Dictionary - Add your custom NPCs here
 const npcDatabase = [
   {
-    name: "Aria the Mage",
+    name: "Wanda",
     description:
       "A wise and powerful sorceress who has studied the arcane arts for centuries. She speaks in riddles and offers mystical guidance.",
-    modelPath: "models/aria_mage.glb",
+    modelPath: "models/wanda.glb",
     startingPrompt:
       "Greetings, traveler. I sense great potential within you. The ancient magics whisper of your arrival. What knowledge do you seek from the ethereal realms?",
     personality: "mystical, wise, speaks in an archaic manner",
