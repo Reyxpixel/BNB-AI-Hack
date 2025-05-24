@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NPC Chat Demo</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- 3D Model Viewer Section -->
+        <div class="model-section">
+            <div class="model-header">
+                <h2 id="npc-name">Loading...</h2>
+                <p id="npc-description">Select an NPC to start chatting</p>
+            </div>
+            
+            <div class="model-viewer">
+                <canvas id="three-canvas"></canvas>
+                <button class="nav-arrow left-arrow" id="prev-npc">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15,18 9,12 15,6"></polyline>
+                    </svg>
+                </button>
+                <button class="nav-arrow right-arrow" id="next-npc">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9,18 15,12 9,6"></polyline>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="npc-counter">
+                <span id="current-npc">1</span> / <span id="total-npcs">5</span>
+            </div>
+        </div>
+
+        <!-- Chat Interface Section -->
+        <div class="chat-section">
+            <div class="chat-header">
+                <h3>Chat with <span id="chat-npc-name">NPC</span></h3>
+                <button id="clear-chat" class="clear-btn">Clear Chat</button>
+            </div>
+            
+            <div class="chat-container" id="chat-container">
+                <div class="welcome-message">
+                    <div class="message npc-message">
+                        <div class="message-content">
+                            <p id="welcome-text">Hello! I'm ready to chat with you.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chat-input-container">
+                <div class="input-wrapper">
+                    <input type="text" id="chat-input" placeholder="Type your message..." maxlength="500">
+                    <button id="send-btn" class="send-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22,2 15,22 11,13 2,9"></polygon>
+                        </svg>
+                    </button>
+                </div>
+                <div class="input-counter">
+                    <span id="char-count">0</span>/500
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-spinner"></div>
+        <p>Loading NPC...</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
