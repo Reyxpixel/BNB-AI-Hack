@@ -1,0 +1,76 @@
+{
+  "npcId": "Deadlock",
+  "permanentTraits": {
+    "corePersonality": "Neutral",
+    "learningStyle": "Adaptive",
+    "adaptability": 50,
+    "moralAlignment": "Neutral",
+    "experienceLevel": 1,
+    "lastUpdated": 1748128620902
+  },
+  "temporaryTraits": {
+    "currentMood": "Neutral:50",
+    "conversationFocus": "General:casual",
+    "sessionContext": 4,
+    "lastInteraction": 1748128667628
+  },
+  "interactionHistory": [
+    {
+      "input": "I am interested in getting a job with 100 grand salary per year",
+      "response": "That's a great goal to have. A $100,000 salary per year is definitely achievable, but it might require some planning and strategy. What kind of job or industry are you interested in? Are you looking to stick with something you're already experienced in, or are you open to exploring new fields?\n\nAlso, have you considered what you're willing to do to reach that salary goal? For example, are you open to relocating, working long hours, or taking on additional responsibilities? Knowing these details can help us narrow down some options and create a plan to get you closer to your goal.\n\nI'm here to help, and I'm curious to learn more about what you're looking for in a job. What are your thoughts, and where do you think you'd like to start?",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "Neutral:50",
+          "General:casual"
+        ],
+        "responseType": "Casual",
+        "hash": ""
+      },
+      "timestamp": 1748128622006
+    },
+    {
+      "input": "I am interested in getting a job with 100 grand salary per year",
+      "response": "We've discussed this goal before, and I'm excited to help you explore it further. As I mentioned earlier, a $100,000 salary per year is definitely achievable, but it might require some planning and strategy.\n\nTo recap, we didn't get a chance to dive deeper into your interests and preferences last time. Could you tell me a bit more about what you're looking for in a job? What are your passions, skills, and values? Are you interested in a specific industry, such as tech, finance, or healthcare?\n\nAlso, what's your current level of experience and education? This information can help us identify potential job opportunities that align with your goal and qualifications.\n\nLet's work together to create a roadmap to help you reach your salary goal. I'm here to offer guidance and support every step of the way. What do you say we start by exploring some job options and industries that might be a good fit for you?",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "Neutral:50",
+          "General:casual"
+        ],
+        "responseType": "Casual",
+        "hash": ""
+      },
+      "timestamp": 1748128631186
+    },
+    {
+      "input": "ok",
+      "response": "I sense a bit of enthusiasm, but also maybe a bit of uncertainty. That's completely okay. Let's take a step back and break down the goal of reaching a $100,000 salary per year. We can explore different industries, job roles, and requirements to see what might be a good fit for you.\n\nTo get started, I have a few questions to help narrow down some options. Are you more interested in working in an office, or do you prefer working remotely? Are you open to working in a management role, or do you prefer individual contributor roles?\n\nAlso, I want to make sure I understand your current situation. What's your current job title, and what are your current responsibilities? This will help me provide more tailored guidance and recommendations.\n\nLet's work together to create a list of potential job opportunities that align with your interests, skills, and experience. Sound like a good plan?",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "mood:neutral",
+          "focus:none"
+        ],
+        "responseType": "Guidance",
+        "hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "timestamp": 1748128634451
+    },
+    {
+      "input": "Hey! Do you remember me",
+      "response": "I think I do. We've had a few conversations before about your goal of getting a job with a $100,000 salary per year, right? I'm Deadlock, and I've been trying to help you explore different options and create a plan to reach your goal. How have you been? Have you made any progress or had any new developments since we last spoke?",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "Neutral:50",
+          "General:casual"
+        ],
+        "responseType": "Casual",
+        "hash": ""
+      },
+      "timestamp": 1748128667628
+    }
+  ],
+  "lastUpdated": "2025-05-24T23:17:48.082Z"
+}

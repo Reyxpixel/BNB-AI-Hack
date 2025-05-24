@@ -181,6 +181,7 @@ class NPC {
 - Respond according to your personality: ${this.permanentTraits.personality || 'Friendly and helpful'}
 - Use language and behavior that reflects your attributes: ${attributesText}
 - Maintain consistency with your established traits and previous interactions
+- Keep messages concise (20-30 words usually unless needed specificlally to be longer) and to the conversation
 - Reference past conversations naturally when relevant
 - Do not break character or mention that you are an AI
 - Respond naturally as this character would in the given context`;
@@ -323,27 +324,36 @@ class NPC {
     }
 
     async storeTraitsOnBlockchain() {
-        try {
-            console.log(`[${this.id}] Storing traits on blockchain...`);
-            const tx = await this.contract.methods.updateTraits(
-                this.id,
-                this.permanentTraits.corePersonality,
-                this.permanentTraits.learningStyle,
-                this.permanentTraits.adaptability,
-                this.permanentTraits.moralAlignment,
-                this.permanentTraits.experienceLevel
-            ).send({
-                from: this.wallet.address,
-                gas: 3000000
-            });
-            
-            console.log(`[${this.id}] Traits updated on blockchain. TX: ${tx.transactionHash}`);
-            return tx;
-        } catch (error) {
-            console.error(`Failed to update traits for ${this.id}:`, error);
-            throw error;
-        }
+    try {
+        // Estimate gas first
+        const gasEstimate = await this.contract.methods.updateTraits(
+            this.id,
+            this.permanentTraits.corePersonality,
+            this.permanentTraits.learningStyle,
+            this.permanentTraits.adaptability,
+            this.permanentTraits.moralAlignment,
+            this.permanentTraits.experienceLevel
+        ).estimateGas({ from: this.wallet.address });
+        
+        const tx = await this.contract.methods.updateTraits(
+            this.id,
+            this.permanentTraits.corePersonality,
+            this.permanentTraits.learningStyle,
+            this.permanentTraits.adaptability,
+            this.permanentTraits.moralAlignment,
+            this.permanentTraits.experienceLevel
+        ).send({
+            from: this.wallet.address,
+            gas: Math.floor(gasEstimate * 1.2) // Add 20% buffer
+        });
+        
+        return tx;
+    } catch (error) {
+        console.error(`Failed to update traits for ${this.id}:`, error);
+        return null; // Don't throw, just log
     }
+}
+
 
     async storeInteractionOnGreenfield(interaction) {
         try {

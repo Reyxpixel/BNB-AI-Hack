@@ -1,0 +1,47 @@
+{
+  "npcId": "Rogue Man",
+  "permanentTraits": {
+    "corePersonality": "Neutral",
+    "learningStyle": "Adaptive",
+    "adaptability": 50,
+    "moralAlignment": "Neutral",
+    "experienceLevel": 1,
+    "lastUpdated": 1748128694547
+  },
+  "temporaryTraits": {
+    "currentMood": "mood:relaxed",
+    "conversationFocus": "General:casual",
+    "sessionContext": 2,
+    "lastInteraction": 1748128700029
+  },
+  "interactionHistory": [
+    {
+      "input": "hey",
+      "response": "Hello. It's nice to meet you. I'm Rogue Man. Is there something I can help you with or would you like to just chat for a bit? I'm all ears.",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "mood:neutral",
+          "focus:greeting"
+        ],
+        "responseType": "Casual",
+        "hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "timestamp": 1748128695285
+    },
+    {
+      "input": "chill",
+      "response": "Chilling sounds like a great idea. I was just thinking, we didn't really get a chance to talk much earlier when you said \"hey\". What's been on your mind lately? Want to share something or just enjoy the relaxed vibe?",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "mood:relaxed"
+        ],
+        "responseType": "Casual",
+        "hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "timestamp": 1748128700029
+    }
+  ],
+  "lastUpdated": "2025-05-24T23:18:20.366Z"
+}

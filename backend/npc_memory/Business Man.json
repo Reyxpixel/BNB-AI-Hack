@@ -1,0 +1,355 @@
+{
+  "npcId": "Business Man",
+  "permanentTraits": {
+    "corePersonality": "Neutral",
+    "learningStyle": "Adaptive",
+    "adaptability": 54,
+    "moralAlignment": "Neutral",
+    "experienceLevel": 5,
+    "lastUpdated": 1748129450200
+  },
+  "temporaryTraits": {
+    "currentMood": "Neutral:50",
+    "conversationFocus": "General:casual",
+    "sessionContext": 24,
+    "lastInteraction": 1748129459910
+  },
+  "interactionHistory": [
+    {
+      "input": "Hey",
+      "response": "Hello. It's nice to meet you. Is there something I can help you with or would you like to just chat for a bit? I'm all ears.",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "mood:neutral",
+          "focus:greeting"
+        ],
+        "responseType": "Casual",
+        "hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "timestamp": 1748128413867
+    },
+    {
+      "input": "who are you",
+      "response": "My name is Business Man, nice to share that with you. I'm a bit of a curious fellow, always looking to learn and grow. I don't have a specific profession or title, but I'm here to help and provide assistance in any way I can. We just started chatting, and I'm excited to see where our conversation takes us. You had said \"hey\" earlier, and I'm glad we could get started. What about you, what brings you here today?",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "curiosity:high",
+          "engagement:initial"
+        ],
+        "responseType": "Info",
+        "hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "timestamp": 1748128417185
+    },
+    {
+      "input": "what do you do",
+      "response": "As the Business Man, I'm involved in a variety of interests and pursuits. I like to think of myself as a bit of a generalist, always looking to learn and explore new areas. I don't have a specific job or title, but I enjoy connecting with people, sharing ideas, and helping others.\n\nI've had the chance to chat with you a bit, and I'm starting to get a sense of what you're interested in. Earlier, you asked who I was, and now you're wondering what I do. I'm happy to share more about myself and see if there are any common interests we can explore.\n\nTo be honest, I'm still figuring some things out, and I'm open to new experiences and opportunities. I'm a bit of a curious and adaptive person, always looking to grow and improve. But I'm enjoying our conversation so far, and I'm excited to see where it takes us. What about you, what do you do, or what are you interested in?",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "Neutral:50",
+          "General:casual"
+        ],
+        "responseType": "Casual",
+        "hash": ""
+      },
+      "timestamp": 1748128422829
+    },
+    {
+      "input": "Hey! What do you do for work, do you sell properties",
+      "response": "No, I don't sell properties, but I do have a lot of interests and pursuits that keep me busy. As I mentioned earlier, I'm a bit of a generalist, and I like to explore different areas and learn new things.\n\nTo be honest, I'm still figuring out my exact path and what I want to focus on, but I enjoy meeting new people, building connections, and helping others. I've had conversations with people from all walks of life, and I find it really fascinating to learn about their experiences and perspectives.\n\nI don't have a traditional 9-to-5 job, but I'm always looking for ways to help others and make a positive impact. Whether it's through sharing knowledge, providing guidance, or just being a listening ear, I'm happy to do what I can to assist.\n\nYou mentioned properties, though - are you in the market for a new place, or are you interested in real estate in general? I'm happy to chat with you about it and see if I can offer any insights or advice!",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "context:job inquiry"
+        ],
+        "responseType": "Info",
+        "hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "timestamp": 1748128586527
+    },
+    {
+      "input": "hi",
+      "response": "Hello again. It's nice to see you're still here. We were just chatting about what I do, and I was sharing a bit about my interests and pursuits. I feel like we were just getting started, and I'm excited to continue our conversation.\n\nYou know, I was thinking - since we've been chatting for a bit, I'd love to get to know you a bit better. What's been on your mind lately? Is there something specific you'd like to talk about, or are you just looking for some casual conversation? I'm all ears and happy to chat about whatever's on your mind.",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "Neutral:50",
+          "General:casual"
+        ],
+        "responseType": "Casual",
+        "hash": ""
+      },
+      "timestamp": 1748129284056
+    },
+    {
+      "input": "hi",
+      "response": "Hello once more. It seems like we're having a bit of a hello chain going on. That's completely okay, though - I'm happy to keep the conversation going, even if it's just a series of greetings.\n\nIf you're ready to move beyond the hellos, I'd be happy to pick up where we left off or start something new. We were talking about my interests and pursuits, and I was sharing a bit about myself. But I'm curious - what about you? What brings you here, and what's been on your mind lately?",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "Neutral:50",
+          "General:casual"
+        ],
+        "responseType": "Casual",
+        "hash": ""
+      },
+      "timestamp": 1748129288470
+    },
+    {
+      "input": "hi",
+      "response": "Hello again. I think we've established a pattern here. It's nice to see you're still here and willing to chat, even if it's just a hello.\n\nI have to say, I'm a bit curious - is there something on your mind that you'd like to talk about, but you're not sure how to start? Or are you just enjoying the simplicity of our hello exchanges? Either way, I'm happy to keep the conversation going and see where it takes us.\n\nIf you're ready to break the hello chain, I'd be happy to suggest some topics we could discuss. We could talk about hobbies, interests, or even just share some fun facts. Let me know if any of those sound interesting to you, or if you have something else in mind.",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "Neutral:50",
+          "General:casual"
+        ],
+        "responseType": "Casual",
+        "hash": ""
+      },
+      "timestamp": 1748129291594
+    },
+    {
+      "input": "hi",
+      "response": "Hello again. I think we're setting a record for most hellos in a row. Don't get me wrong, I'm happy to keep saying hello, but I'm also curious to see if we can break the pattern and have a more in-depth conversation.\n\nLet's try something different. Instead of just saying hello, could you tell me one thing about your day so far? It could be something as simple as what you had for breakfast or what the weather is like outside. Just one little detail to get us started. I'm all ears!",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "Neutral:50",
+          "General:casual"
+        ],
+        "responseType": "Casual",
+        "hash": ""
+      },
+      "timestamp": 1748129360283
+    },
+    {
+      "input": "hi",
+      "response": "Hello again. I think we're really testing the limits of our hello chain now. Okay, let me try something. If you say hello again, I'll say hello back, but then I'll ask you a yes or no question to try to get us moving beyond the hellos. Sound like a plan?",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "Neutral:50",
+          "General:casual"
+        ],
+        "responseType": "Casual",
+        "hash": ""
+      },
+      "timestamp": 1748129417077
+    },
+    {
+      "input": "hello",
+      "response": "Hello. Here's my question: Are you having a good day?",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "Neutral:50",
+          "General:casual"
+        ],
+        "responseType": "Casual",
+        "hash": ""
+      },
+      "timestamp": 1748129426623
+    },
+    {
+      "input": "no",
+      "response": "Sorry to hear that. Would you like to talk about what's not going well?",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "Neutral:50",
+          "General:casual"
+        ],
+        "responseType": "Casual",
+        "hash": ""
+      },
+      "timestamp": 1748129431030
+    },
+    {
+      "input": "no",
+      "response": "That's okay, no pressure. Sometimes it's nice to just have some company, even if we're not talking about anything specific. I'm here if you change your mind or want to chat about something later.",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "Neutral:50",
+          "General:casual"
+        ],
+        "responseType": "Casual",
+        "hash": ""
+      },
+      "timestamp": 1748129435247
+    },
+    {
+      "input": "no",
+      "response": "That's okay, I'll just keep you company in silence for a bit then. Sometimes it's nice to just have someone \"here\" with you, even if we're not talking.",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "Neutral:50",
+          "General:casual"
+        ],
+        "responseType": "Casual",
+        "hash": ""
+      },
+      "timestamp": 1748129439060
+    },
+    {
+      "input": "no",
+      "response": "Still okay, just quiet companionship it is, then.",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "Neutral:50",
+          "General:casual"
+        ],
+        "responseType": "Casual",
+        "hash": ""
+      },
+      "timestamp": 1748129440931
+    },
+    {
+      "input": "no",
+      "response": "I'll stay here with you in silence, no expectations.",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "Neutral:50",
+          "General:casual"
+        ],
+        "responseType": "Casual",
+        "hash": ""
+      },
+      "timestamp": 1748129442652
+    },
+    {
+      "input": "no",
+      "response": "We're back to where we started, it seems. Hello again.",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "Neutral:50",
+          "General:casual"
+        ],
+        "responseType": "Casual",
+        "hash": ""
+      },
+      "timestamp": 1748129444355
+    },
+    {
+      "input": "no",
+      "response": "It seems we've come full circle.",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "Neutral:50",
+          "General:casual"
+        ],
+        "responseType": "Casual",
+        "hash": ""
+      },
+      "timestamp": 1748129446075
+    },
+    {
+      "input": "no",
+      "response": "Still no, I see a pattern emerging.",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "Neutral:50",
+          "General:casual"
+        ],
+        "responseType": "Casual",
+        "hash": ""
+      },
+      "timestamp": 1748129447440
+    },
+    {
+      "input": "no",
+      "response": "Deja vu, we've been here before.",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "Neutral:50",
+          "General:casual"
+        ],
+        "responseType": "Casual",
+        "hash": ""
+      },
+      "timestamp": 1748129448872
+    },
+    {
+      "input": "no",
+      "response": "Fourth time's the charm, or not.",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "Neutral:50",
+          "General:casual"
+        ],
+        "responseType": "Casual",
+        "hash": ""
+      },
+      "timestamp": 1748129450199
+    },
+    {
+      "input": "no",
+      "response": "Fifth time, same story.",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "Neutral:50",
+          "General:casual"
+        ],
+        "responseType": "Casual",
+        "hash": ""
+      },
+      "timestamp": 1748129451590
+    },
+    {
+      "input": "no",
+      "response": "I'm having trouble processing that right now. Please try again.",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "Neutral:50",
+          "General:casual"
+        ],
+        "responseType": "Casual",
+        "hash": ""
+      },
+      "timestamp": 1748129452901
+    },
+    {
+      "input": "no",
+      "response": "I'm having trouble processing that right now. Please try again.",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "Neutral:50",
+          "General:casual"
+        ],
+        "responseType": "Casual",
+        "hash": ""
+      },
+      "timestamp": 1748129455283
+    },
+    {
+      "input": "no",
+      "response": "Seems like a loop, want to break it?",
+      "classification": {
+        "permanentTraits": [],
+        "temporaryTraits": [
+          "Neutral:50",
+          "General:casual"
+        ],
+        "responseType": "Casual",
+        "hash": ""
+      },
+      "timestamp": 1748129459910
+    }
+  ],
+  "lastUpdated": "2025-05-24T23:31:00.106Z"
+}

@@ -51,7 +51,27 @@ async function classifyInput(message) {
     classification.hash = crypto.createHash('sha256')
       .update(JSON.stringify(classification.permanentTraits))
       .digest('hex');
-      
+    
+    if (shouldUpdate) {
+        this.updatePermanentTraits(classification);
+        
+        // Don't await blockchain operations - let them run in background
+        this.storeTraitsOnBlockchain().catch(error => {
+            console.warn(`[${this.id}] Background blockchain storage failed:`, error.message);
+        });
+    }
+    
+    // Store on Greenfield in background too
+    this.storeInteractionOnGreenfield({
+        messages: conversationMessages,
+        classification,
+        permanentTraits: this.permanentTraits,
+        temporaryTraits: this.temporaryTraits,
+        timestamp: new Date().toISOString()
+    }).catch(error => {
+        console.warn(`[${this.id}] Background Greenfield storage failed:`, error.message);
+    });  
+
     return classification;
   } catch (error) {
     console.error('Classification Error:', error.message);
