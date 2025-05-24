@@ -8,6 +8,7 @@ const llmClient = require('./llmclient');
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 
 const app = express();
 app.use(cors());
@@ -32,11 +33,15 @@ if (!fs.existsSync(path.join(__dirname, 'npc_memory'))) {
   fs.mkdirSync(path.join(__dirname, 'npc_memory'));
 }
 
+// === STATIC FILES SERVING ===
+app.use(express.static(path.join(__dirname, '../public')));
+
+// === API ROUTES ===
+
 // Enhanced /chat endpoint with blockchain-first approach
-app.post('/chat', async (req, res) => {
+app.post('/api/chat', async (req, res) => {
   try {
     const { npcId, messages } = req.body;
-    
     if (!npcId || !messages) {
       return res.status(400).json({ error: 'Missing npcId or messages' });
     }
@@ -50,18 +55,18 @@ app.post('/chat', async (req, res) => {
       wallet
     });
 
-    // CRITICAL: Fetch latest traits from blockchain before processing
+    // Fetch latest traits from blockchain before processing
     await npc.syncTraitsFromBlockchain();
 
     // Process the interaction with fresh blockchain data
     const reply = await npc.processInteraction(messages, llmClient);
-    
+
     res.json({ reply });
   } catch (error) {
     console.error('Chat error:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Chat processing failed',
-      details: error.message 
+      details: error.message
     });
   }
 });
@@ -84,7 +89,6 @@ app.get('/traits/:npcId', async (req, res) => {
   }
 });
 
-
 // Store memory endpoint
 app.post('/storeMemory', async (req, res) => {
   try {
@@ -101,7 +105,7 @@ app.post('/storeMemory', async (req, res) => {
       timestamp: new Date().toISOString()
     });
 
-    // --- Step 1: Check if bucket exists ---
+    // Step 1: Check if bucket exists
     console.log('Checking if bucket exists:', bucketName);
     const buckets = await greenfield.bucket.listBuckets();
     const exists = buckets.some(b => b.bucketName === bucketName);
@@ -109,7 +113,7 @@ app.post('/storeMemory', async (req, res) => {
       return res.status(400).json({ error: `Bucket ${bucketName} does not exist.` });
     }
 
-    // --- Step 2: Create object metadata ---
+    // Step 2: Create object metadata
     console.log('Creating object metadata for:', objectName);
     const createResult = await greenfield.object.createObject({
       bucketName,
@@ -119,7 +123,7 @@ app.post('/storeMemory', async (req, res) => {
     });
     console.log('createObject result:', createResult);
 
-    // --- Step 3: Upload the actual object data ---
+    // Step 3: Upload the actual object data
     console.log('Uploading object data...');
     const putResult = await greenfield.object.putObject({
       bucketName,
@@ -128,7 +132,7 @@ app.post('/storeMemory', async (req, res) => {
     });
     console.log('putObject result:', putResult);
 
-    // --- Step 4: Store hash on chain as before ---
+    // Step 4: Store hash on chain as before
     const memoryHash = crypto.createHash('sha256')
       .update(bodyData)
       .digest('hex');
@@ -155,12 +159,11 @@ app.post('/storeMemory', async (req, res) => {
   }
 });
 
-
 // Fetch memory endpoint
 app.get('/fetchMemory/:npcId', async (req, res) => {
   try {
     const { npcId } = req.params;
-    
+
     const objects = await greenfield.object.listObjects({
       bucketName: process.env.GREENFIELD_BUCKET,
       prefix: `memory/${npcId}/`
@@ -170,7 +173,7 @@ app.get('/fetchMemory/:npcId', async (req, res) => {
       return res.status(404).json({ error: 'No memories found for NPC' });
     }
 
-    const latestMemory = objects.sort((a, b) => 
+    const latestMemory = objects.sort((a, b) =>
       b.objectName.localeCompare(a.objectName))[0];
 
     const memoryData = await greenfield.object.getObject({
@@ -188,12 +191,45 @@ app.get('/fetchMemory/:npcId', async (req, res) => {
 
   } catch (error) {
     console.error('Memory fetch error:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Memory retrieval failed',
-      details: error.message 
+      details: error.message
     });
   }
 });
 
+// === STARTUP: Blockchain Sync Check, then Start Server ===
 const PORT = process.env.PORT || 3000;
-module.exports = app;
+
+function getIPAddress() {
+  const interfaces = os.networkInterfaces();
+  for (const name of Object.keys(interfaces)) {
+    for (const iface of interfaces[name]) {
+      if (iface.family === 'IPv4' && !iface.internal) {
+        return iface.address;
+      }
+    }
+  }
+  return 'localhost';
+}
+
+(async () => {
+  try {
+    // Optional: Blockchain node sync check
+    // const isSynced = await web3.eth.isSyncing();
+    // if (isSynced !== false) {
+    //   console.error('Blockchain node not synced! Current status:', isSynced);
+    //   process.exit(1);
+    // }
+
+    app.listen(PORT, () => {
+      console.log('\n=== SERVER STARTED ===');
+      console.log(`Local:   http://localhost:${PORT}`);
+      console.log(`Network: http://${getIPAddress()}:${PORT}`);
+      console.log('========================\n');
+    });
+  } catch (err) {
+    console.error('Server startup failed:', err);
+    process.exit(1);
+  }
+})();
