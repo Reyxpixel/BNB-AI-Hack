@@ -34,10 +34,10 @@ const npcDatabase = [
     attributes: ["Healing", "Kind", "Gentle", "Sacred"]
   },
   {
-    name: "Zyx the Inventor",
+    name: "Ash Ketchum",
     description:
       "An eccentric genius inventor who creates impossible gadgets. Always excited about new discoveries and innovations.",
-    modelPath: "models/zyx_inventor.glb",
+    modelPath: "models/ash.glb",
     startingPrompt:
       "Oh! A visitor! Perfect timing! I just finished my latest contraption - a quantum flux capacitor! Well, it doesn't work yet, but that's beside the point. What brings you to my workshop?",
     personality: "eccentric, enthusiastic, scientific, uses technical jargon",
