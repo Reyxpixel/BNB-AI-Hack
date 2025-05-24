@@ -1,6 +1,17 @@
 // Import Three.js library
 const THREE = window.THREE
 
+// User attributes system
+const userAttributes = {
+  wordAttributes: ["Curious", "Analytical", "Creative", "Persistent"],
+  progressAttributes: [
+    { name: "Reputation", value: 75 },
+    { name: "Trust Level", value: 60 },
+    { name: "Experience", value: 40 },
+    { name: "Influence", value: 85 }
+  ]
+}
+
 // NPC Dictionary - Add your custom NPCs here
 const npcDatabase = [
   {
@@ -62,14 +73,90 @@ let currentNPCIndex = 0
 let isLoading = false
 let chatHistory = []
 let loader // GLTF loader
+let modelRotationSpeed = 0.008 // Rotation speed for player select effect
 
 // Initialize the application
 document.addEventListener("DOMContentLoaded", () => {
   initThreeJS()
   initEventListeners()
+  initPerceptionSystem()
   loadNPC(0)
   updateNPCCounter()
 })
+
+// Initialize perception system
+function initPerceptionSystem() {
+  const perceptionBtn = document.getElementById("perception-btn")
+  const perceptionDropdown = document.getElementById("perception-dropdown")
+  
+  // Update attributes in dropdown
+  updatePerceptionDropdown()
+  
+  // Toggle dropdown
+  perceptionBtn.addEventListener("click", (e) => {
+    e.stopPropagation()
+    const isOpen = perceptionDropdown.classList.contains("show")
+    
+    if (isOpen) {
+      closePerceptionDropdown()
+    } else {
+      openPerceptionDropdown()
+    }
+  })
+  
+  // Close dropdown when clicking outside
+  document.addEventListener("click", (e) => {
+    if (!perceptionDropdown.contains(e.target) && !perceptionBtn.contains(e.target)) {
+      closePerceptionDropdown()
+    }
+  })
+}
+
+function openPerceptionDropdown() {
+  const perceptionBtn = document.getElementById("perception-btn")
+  const perceptionDropdown = document.getElementById("perception-dropdown")
+  
+  perceptionBtn.classList.add("active")
+  perceptionDropdown.classList.add("show")
+}
+
+function closePerceptionDropdown() {
+  const perceptionBtn = document.getElementById("perception-btn")
+  const perceptionDropdown = document.getElementById("perception-dropdown")
+  
+  perceptionBtn.classList.remove("active")
+  perceptionDropdown.classList.remove("show")
+}
+
+function updatePerceptionDropdown() {
+  // Update word attributes
+  const wordAttributesContainer = document.querySelector(".word-attributes")
+  wordAttributesContainer.innerHTML = ""
+  
+  userAttributes.wordAttributes.forEach(attr => {
+    const span = document.createElement("span")
+    span.className = "word-attribute"
+    span.textContent = attr
+    wordAttributesContainer.appendChild(span)
+  })
+  
+  // Update progress attributes
+  const progressAttributesContainer = document.querySelector(".progress-attributes")
+  progressAttributesContainer.innerHTML = ""
+  
+  userAttributes.progressAttributes.forEach(attr => {
+    const progressItem = document.createElement("div")
+    progressItem.className = "progress-item"
+    progressItem.innerHTML = `
+      <span class="progress-label">${attr.name}</span>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width: ${attr.value}%"></div>
+      </div>
+      <span class="progress-value">${attr.value}%</span>
+    `
+    progressAttributesContainer.appendChild(progressItem)
+  })
+}
 
 // Three.js initialization
 function initThreeJS() {
@@ -80,9 +167,9 @@ function initThreeJS() {
   scene = new THREE.Scene()
   scene.background = new THREE.Color(0x222222)
 
-  // Camera setup
-  camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000)
-  camera.position.set(0, 1, 4)
+  // Camera setup - positioned for optimal character viewing
+  camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000)
+  camera.position.set(0, 1.6, 4.5) // Positioned to show head and torso
 
   // Renderer setup
   renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true })
@@ -91,7 +178,7 @@ function initThreeJS() {
   renderer.shadowMap.type = THREE.PCFSoftShadowMap
   renderer.outputEncoding = THREE.sRGBEncoding
   renderer.toneMapping = THREE.ACESFilmicToneMapping
-  renderer.toneMappingExposure = 1
+  renderer.toneMappingExposure = 1.2
 
   // Controls setup
   if (typeof THREE.OrbitControls !== "undefined") {
@@ -100,9 +187,11 @@ function initThreeJS() {
     controls.dampingFactor = 0.05
     controls.enableZoom = true
     controls.enablePan = false
-    controls.maxPolarAngle = Math.PI / 2
-    controls.minDistance = 2
+    controls.maxPolarAngle = Math.PI / 2.2 // Limit vertical rotation
+    controls.minPolarAngle = Math.PI / 6   // Prevent looking too far up
+    controls.minDistance = 2.5
     controls.maxDistance = 8
+    controls.target.set(0, 1.4, 0) // Look at upper body/head area
   }
 
   // Initialize GLTF loader
@@ -115,20 +204,29 @@ function initThreeJS() {
     loader = null
   }
 
-  // Lighting setup
+  // Enhanced lighting setup for character showcase
   const ambientLight = new THREE.AmbientLight(0xffffff, 0.4)
   scene.add(ambientLight)
 
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 1)
-  directionalLight.position.set(5, 5, 5)
-  directionalLight.castShadow = true
-  directionalLight.shadow.mapSize.width = 2048
-  directionalLight.shadow.mapSize.height = 2048
-  scene.add(directionalLight)
+  // Key light (main character lighting)
+  const keyLight = new THREE.DirectionalLight(0xffffff, 1.2)
+  keyLight.position.set(3, 4, 3)
+  keyLight.castShadow = true
+  keyLight.shadow.mapSize.width = 2048
+  keyLight.shadow.mapSize.height = 2048
+  keyLight.shadow.camera.near = 0.5
+  keyLight.shadow.camera.far = 50
+  scene.add(keyLight)
 
-  const fillLight = new THREE.DirectionalLight(0xffffff, 0.3)
-  fillLight.position.set(-5, 0, -5)
+  // Fill light (soften shadows)
+  const fillLight = new THREE.DirectionalLight(0xffffff, 0.4)
+  fillLight.position.set(-3, 2, -2)
   scene.add(fillLight)
+
+  // Rim light (character outline)
+  const rimLight = new THREE.DirectionalLight(0xffd700, 0.3)
+  rimLight.position.set(-2, 3, -4)
+  scene.add(rimLight)
 
   // Handle window resize
   window.addEventListener("resize", onWindowResize)
@@ -137,7 +235,7 @@ function initThreeJS() {
   animate()
 }
 
-// Animation loop
+// Animation loop with player select rotation
 function animate() {
   requestAnimationFrame(animate)
 
@@ -146,9 +244,9 @@ function animate() {
     controls.update()
   }
 
-  // Auto-rotate the model if no user interaction
-  if (currentModel && (!controls || !controls.enabled)) {
-    currentModel.rotation.y += 0.005
+  // Continuous rotation like player select screen
+  if (currentModel) {
+    currentModel.rotation.y += modelRotationSpeed
   }
 
   renderer.render(scene, camera)
@@ -168,8 +266,81 @@ function onWindowResize() {
 function updateModelStatus(message) {
   const statusElement = document.getElementById("model-status")
   if (statusElement) {
-    statusElement.textContent = message
+    if (message) {
+      statusElement.textContent = message
+      statusElement.classList.add("show")
+    } else {
+      statusElement.classList.remove("show")
+      // Clear text after transition
+      setTimeout(() => {
+        if (!statusElement.classList.contains("show")) {
+          statusElement.textContent = ""
+        }
+      }, 300)
+    }
   }
+}
+
+// Smart model positioning function
+function positionModelOptimally(model) {
+  // Calculate bounding box
+  const box = new THREE.Box3().setFromObject(model)
+  const size = box.getSize(new THREE.Vector3())
+  const center = box.getCenter(new THREE.Vector3())
+  
+  // Determine if this is a humanoid character by checking proportions
+  const isHumanoid = size.y > size.x && size.y > size.z && size.y > 1.5
+  
+  let targetScale, targetY
+  
+  if (isHumanoid) {
+    // For humanoid characters, scale to show head and torso nicely
+    targetScale = 2.2 / size.y // Scale based on height
+    targetY = -box.min.y * targetScale + 0.1 // Place feet slightly above ground
+    
+    // Adjust camera target for humanoid characters (focus on upper body)
+    if (controls) {
+      controls.target.set(0, size.y * targetScale * 0.65, 0)
+    }
+  } else {
+    // For non-humanoid models, use general scaling
+    const maxSize = Math.max(size.x, size.y, size.z)
+    targetScale = 2.5 / maxSize
+    targetY = -box.min.y * targetScale
+    
+    // Center camera target for non-humanoid models
+    if (controls) {
+      controls.target.set(0, size.y * targetScale * 0.5, 0)
+    }
+  }
+  
+  // Apply scaling
+  model.scale.set(targetScale, targetScale, targetScale)
+  
+  // Position model
+  model.position.set(
+    -center.x * targetScale,
+    targetY,
+    -center.z * targetScale
+  )
+  
+  // Try to orient model to face camera (detect front face)
+  // This is a simple heuristic - you might need to adjust per model
+  const meshes = []
+  model.traverse((child) => {
+    if (child.isMesh) {
+      meshes.push(child)
+    }
+  })
+  
+  // If we have meshes, try to determine front-facing direction
+  if (meshes.length > 0) {
+    // Simple heuristic: assume models are initially facing forward (negative Z)
+    // You might need to adjust this rotation per model
+    model.rotation.y = 0 // Start facing camera
+  }
+  
+  console.log(`📐 Model positioned: scale=${targetScale.toFixed(2)}, isHumanoid=${isHumanoid}`)
 }
 
 // Load NPC model and data with smooth transitions
@@ -220,18 +391,12 @@ function loadNPC(index) {
   }, 300)
 }
 
-// Load 3D model
+// Load 3D model with smart positioning
 function loadModel(npc) {
-  // Remove current model and base
+  // Remove current model
   if (currentModel) {
     scene.remove(currentModel)
     currentModel = null
-  }
-  
-  // Remove any existing base
-  const existingBase = scene.getObjectByName("modelBase")
-  if (existingBase) {
-    scene.remove(existingBase)
   }
 
   if (!loader) {
@@ -252,17 +417,8 @@ function loadModel(npc) {
       
       currentModel = gltf.scene
 
-      // Scale and position the model appropriately
-      const box = new THREE.Box3().setFromObject(currentModel)
-      const size = box.getSize(new THREE.Vector3())
-      const maxSize = Math.max(size.x, size.y, size.z)
-      const scale = 2 / maxSize // Scale to fit in a 2-unit space
-
-      currentModel.scale.set(scale, scale, scale)
-
-      // Center the model
-      const center = box.getCenter(new THREE.Vector3())
-      currentModel.position.set(-center.x * scale, -center.y * scale, -center.z * scale)
+      // Apply smart positioning
+      positionModelOptimally(currentModel)
 
       // Enable shadows and improve materials
       currentModel.traverse((child) => {
@@ -273,12 +429,15 @@ function loadModel(npc) {
           // Improve material properties
           if (child.material) {
             child.material.needsUpdate = true
+            // Enhance material for better character showcase
+            if (child.material.map) {
+              child.material.map.anisotropy = renderer.capabilities.getMaxAnisotropy()
+            }
           }
         }
       })
 
       scene.add(currentModel)
-      addModelBase()
 
       // Hide status after successful load
       setTimeout(() => {
@@ -306,18 +465,6 @@ function loadModel(npc) {
       console.log("4. Verify file permissions and server configuration")
     }
   )
-}
-
-// Add a base platform for the model
-function addModelBase() {
-  // Add a simple base
-  const baseGeometry = new THREE.CylinderGeometry(1.2, 1.2, 0.1, 16)
-  const baseMaterial = new THREE.MeshLambertMaterial({ color: 0xeceff1 })
-  const base = new THREE.Mesh(baseGeometry, baseMaterial)
-  base.position.y = -1
-  base.receiveShadow = true
-  base.name = "modelBase" // Name it so we can remove it later
-  scene.add(base)
 }
 
 // Event listeners
@@ -458,10 +605,46 @@ function addNPC(npcData) {
   updateNPCCounter()
 }
 
+// Utility functions for user attributes
+function updateUserAttribute(type, name, value) {
+  if (type === "word") {
+    const index = userAttributes.wordAttributes.indexOf(name)
+    if (index === -1) {
+      userAttributes.wordAttributes.push(name)
+    }
+  } else if (type === "progress") {
+    const attr = userAttributes.progressAttributes.find(a => a.name === name)
+    if (attr) {
+      attr.value = Math.max(0, Math.min(100, value))
+    } else {
+      userAttributes.progressAttributes.push({ name, value: Math.max(0, Math.min(100, value)) })
+    }
+  }
+  updatePerceptionDropdown()
+}
+
+function removeUserAttribute(type, name) {
+  if (type === "word") {
+    const index = userAttributes.wordAttributes.indexOf(name)
+    if (index > -1) {
+      userAttributes.wordAttributes.splice(index, 1)
+    }
+  } else if (type === "progress") {
+    const index = userAttributes.progressAttributes.findIndex(a => a.name === name)
+    if (index > -1) {
+      userAttributes.progressAttributes.splice(index, 1)
+    }
+  }
+  updatePerceptionDropdown()
+}
+
 // Export functions for potential external use
 window.NPCChat = {
   addNPC,
   loadNPC,
   getCurrentNPC: () => npcDatabase[currentNPCIndex],
   getChatHistory: () => chatHistory,
+  updateUserAttribute,
+  removeUserAttribute,
+  getUserAttributes: () => userAttributes
 }
