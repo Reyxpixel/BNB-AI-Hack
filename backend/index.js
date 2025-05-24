@@ -33,7 +33,7 @@ if (!fs.existsSync(path.join(__dirname, 'npc_memory'))) {
 }
 
 // Enhanced /chat endpoint with blockchain-first approach
-app.post('/chat', async (req, res) => {
+app.post('/api/chat', async (req, res) => {
   try {
     const { npcId, messages } = req.body;
     
@@ -173,3 +173,11 @@ app.get('/fetchMemory/:npcId', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 module.exports = app;
+
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
+
+
+app.use(express.static(path.join(__dirname, '../public')));
+
