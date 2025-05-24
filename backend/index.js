@@ -1,67 +1,174 @@
 require('dotenv').config();
-
 const express = require('express');
-const bodyParser = require('body-parser');
+const cors = require('cors');
+const { Web3 } = require('web3');
+const { GreenfieldSDK } = require('@bnb-chain/greenfield-sdk');
 const NPC = require('./npc');
-const llmClient = require('./llmClient');
+const llmClient = require('./llmclient');
+const crypto = require('crypto');
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
-app.use(bodyParser.json());
+app.use(cors());
+app.use(express.json());
 
-const npcInstances = {};
+// Blockchain Setup
+const web3 = new Web3(process.env.BSC_RPC_URL);
+const greenfield = new GreenfieldSDK({
+  endpoint: process.env.GREENFIELD_ENDPOINT,
+  chainId: process.env.GREENFIELD_CHAIN_ID
+});
 
-// POST /chat - NPC conversation
+const contractABI = require('./abis/NPCTraitsABI.json');
+const contractAddress = process.env.BSC_CONTRACT_ADDRESS;
+const npcContract = new web3.eth.Contract(contractABI, contractAddress);
+
+// Wallet Configuration
+const wallet = web3.eth.accounts.privateKeyToAccount(process.env.BSC_WALLET_PRIVATE_KEY);
+web3.eth.accounts.wallet.add(wallet);
+
+// Create directories if they don't exist
+if (!fs.existsSync(path.join(__dirname, 'npc_memory'))) {
+  fs.mkdirSync(path.join(__dirname, 'npc_memory'));
+}
+
+// Enhanced /chat endpoint with blockchain-first approach
 app.post('/chat', async (req, res) => {
-  const { npcId, messages } = req.body;
-  if (!npcId || !messages) return res.status(400).json({ error: 'Missing npcId or messages' });
-
-  if (!npcInstances[npcId]) {
-    npcInstances[npcId] = new NPC(npcId);
-  } 
-
   try {
-    const reply = await npcInstances[npcId].respond(messages, llmClient);
+    const { npcId, messages } = req.body;
+    
+    if (!npcId || !messages) {
+      return res.status(400).json({ error: 'Missing npcId or messages' });
+    }
+
+    // Always create fresh NPC instance for each query
+    const npc = new NPC(npcId, {
+      web3,
+      greenfield,
+      contractABI,
+      contractAddress,
+      wallet
+    });
+
+    // CRITICAL: Fetch latest traits from blockchain before processing
+    await npc.syncTraitsFromBlockchain();
+
+    // Process the interaction with fresh blockchain data
+    const reply = await npc.processInteraction(messages, llmClient);
+    
     res.json({ reply });
-  } catch (err) {
-    console.error('Error in /chat:', err);
-    res.status(500).json({ error: 'Chat failed' });
+  } catch (error) {
+    console.error('Chat error:', error);
+    res.status(500).json({ 
+      error: 'Chat processing failed',
+      details: error.message 
+    });
   }
 });
 
-// POST /storeMemory - Store memory for NPC
-app.post('/storeMemory', (req, res) => {
-  const { npcId, memory } = req.body;
-  if (!npcId || !memory) return res.status(400).json({ error: 'Missing npcId or memory' });
-
-  if (!npcInstances[npcId]) {
-    npcInstances[npcId] = new NPC(npcId);
+// Get NPC traits endpoint
+app.get('/traits/:npcId', async (req, res) => {
+  try {
+    const traits = await npcContract.methods.getTraits(req.params.npcId).call();
+    res.json({
+      corePersonality: traits.corePersonality || 'Neutral',
+      learningStyle: traits.learningStyle || 'Adaptive',
+      adaptability: parseInt(traits.adaptability) || 50,
+      moralAlignment: traits.moralAlignment || 'Neutral',
+      experienceLevel: parseInt(traits.experienceLevel) || 1
+    });
+  } catch (error) {
+    console.error('Traits fetch error:', error);
+    res.status(500).json({ error: error.message });
   }
-
-  npcInstances[npcId].remember(memory);
-  res.json({ message: 'Memory stored' });
 });
 
-// GET /fetchMemory - Fetch NPC memory
-app.get('/fetchMemory', (req, res) => {
-  const npcId = req.query.npcId;
-  if (!npcId) return res.status(400).json({ error: 'Missing npcId' });
+// Store memory endpoint
+app.post('/storeMemory', async (req, res) => {
+  try {
+    const { npcId, memory } = req.body;
+    if (!npcId || !memory) {
+      return res.status(400).json({ error: 'Missing npcId or memory' });
+    }
 
-  if (!npcInstances[npcId]) return res.status(404).json({ error: 'NPC not found' });
+    const objectName = `memory/${npcId}/${Date.now()}.json`;
+    
+    await greenfield.object.createObject({
+      bucketName: process.env.GREENFIELD_BUCKET,
+      objectName,
+      body: JSON.stringify({
+        npcId,
+        memory,
+        timestamp: new Date().toISOString()
+      }),
+      visibility: 'PRIVATE'
+    });
 
-  const memory = npcInstances[npcId].getMemory();
-  res.json({ memory });
+    const memoryHash = crypto.createHash('sha256')
+      .update(JSON.stringify(memory))
+      .digest('hex');
+
+    await npcContract.methods
+      .storeMemoryHash(npcId, memoryHash)
+      .send({
+        from: wallet.address,
+        gas: 3000000
+      });
+
+    res.json({ 
+      message: 'Memory stored successfully',
+      objectName,
+      hash: memoryHash
+    });
+
+  } catch (error) {
+    console.error('Memory storage error:', error);
+    res.status(500).json({ 
+      error: 'Memory storage failed',
+      details: error.message 
+    });
+  }
 });
 
-// POST /logHash - Log interaction hash for NPC
-app.post('/logHash', (req, res) => {
-  const { npcId, interactionHash } = req.body;
-  if (!npcId || !interactionHash) return res.status(400).json({ error: 'Missing npcId or interactionHash' });
+// Fetch memory endpoint
+app.get('/fetchMemory/:npcId', async (req, res) => {
+  try {
+    const { npcId } = req.params;
+    
+    const objects = await greenfield.object.listObjects({
+      bucketName: process.env.GREENFIELD_BUCKET,
+      prefix: `memory/${npcId}/`
+    });
 
-  console.log(`Hash logged for NPC ${npcId}:`, interactionHash);
-  res.json({ message: 'Hash logged' });
+    if (!objects || objects.length === 0) {
+      return res.status(404).json({ error: 'No memories found for NPC' });
+    }
+
+    const latestMemory = objects.sort((a, b) => 
+      b.objectName.localeCompare(a.objectName))[0];
+
+    const memoryData = await greenfield.object.getObject({
+      bucketName: process.env.GREENFIELD_BUCKET,
+      objectName: latestMemory.objectName
+    });
+
+    res.json({
+      memory: memoryData,
+      metadata: {
+        objectName: latestMemory.objectName,
+        timestamp: latestMemory.createTime
+      }
+    });
+
+  } catch (error) {
+    console.error('Memory fetch error:', error);
+    res.status(500).json({ 
+      error: 'Memory retrieval failed',
+      details: error.message 
+    });
+  }
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+module.exports = app;

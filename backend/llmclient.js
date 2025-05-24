@@ -1,16 +1,14 @@
 const axios = require('axios');
+const crypto = require('crypto');
 
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
-async function chatCompletion(messages) {
+async function groqApiCall(messages, model = 'llama-3.3-70b-versatile') {
   try {
     const response = await axios.post(
       GROQ_API_URL,
-      {
-        model: 'llama-3.3-70b-versatile',
-        messages,
-      },
+      { model, messages },
       {
         headers: {
           Authorization: `Bearer ${GROQ_API_KEY}`,
@@ -20,9 +18,78 @@ async function chatCompletion(messages) {
     );
     return response.data.choices[0].message.content;
   } catch (error) {
-    console.error('Error calling Groq API:', error.response?.data || error.message);
-    throw error;
+    console.error('Groq API Error:', error.response?.data || error.message);
+    throw new Error('AI service unavailable');
   }
 }
 
-module.exports = { chatCompletion };
+async function classifyInput(message) {
+  const systemPrompt = `Analyze the user message and return JSON classification:
+  {
+    "permanentTraits": ["trait1:value", "trait2:value"],
+    "temporaryTraits": ["mood:value", "focus:value"],
+    "responseType": "Guidance/Info/Support/Casual"
+  }
+  
+  Permanent traits are lasting personality changes.
+  Temporary traits are session-specific context.`;
+  
+  try {
+    const result = await groqApiCall([
+      { role: "system", content: systemPrompt },
+      { role: "user", content: message }
+    ]);
+    
+    const classification = JSON.parse(result);
+    
+    // Validate structure
+    if (!classification.permanentTraits || !classification.temporaryTraits) {
+      throw new Error('Invalid classification structure');
+    }
+    
+    // Generate hash for blockchain storage
+    classification.hash = crypto.createHash('sha256')
+      .update(JSON.stringify(classification.permanentTraits))
+      .digest('hex');
+      
+    return classification;
+  } catch (error) {
+    console.error('Classification Error:', error.message);
+    return { 
+      permanentTraits: [],
+      temporaryTraits: ['Neutral:50', 'General:casual'],
+      responseType: 'Casual',
+      hash: ''
+    };
+  }
+}
+
+async function chatCompletion(messages, context) {
+  const systemPrompt = `You are an AI NPC with the following characteristics:
+
+PERMANENT TRAITS:
+- Core Personality: ${context.permanentTraits.corePersonality}
+- Learning Style: ${context.permanentTraits.learningStyle}
+- Adaptability: ${context.permanentTraits.adaptability}/100
+- Moral Alignment: ${context.permanentTraits.moralAlignment}
+- Experience Level: ${context.permanentTraits.experienceLevel}
+
+CURRENT STATE:
+- Mood: ${context.temporaryTraits.currentMood}
+- Focus: ${context.temporaryTraits.conversationFocus}
+- Session Context: ${context.temporaryTraits.sessionContext} messages
+
+Respond naturally according to these traits. Show growth and learning from interactions.`;
+  
+  try {
+    return await groqApiCall([
+      { role: "system", content: systemPrompt },
+      ...messages
+    ]);
+  } catch (error) {
+    console.error('Chat completion error:', error);
+    return "I'm having trouble processing that right now. Please try again.";
+  }
+}
+
+module.exports = { chatCompletion, classifyInput };

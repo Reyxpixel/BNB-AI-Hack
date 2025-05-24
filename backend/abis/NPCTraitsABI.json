@@ -1,0 +1,58 @@
+[
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true, "internalType": "string", "name": "npcId", "type": "string"},
+      {"indexed": false, "internalType": "string", "name": "corePersonality", "type": "string"},
+      {"indexed": false, "internalType": "uint256", "name": "adaptability", "type": "uint256"},
+      {"indexed": false, "internalType": "uint256", "name": "timestamp", "type": "uint256"}
+    ],
+    "name": "TraitsUpdated",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {"internalType": "string", "name": "npcId", "type": "string"}
+    ],
+    "name": "getTraits",
+    "outputs": [
+      {"internalType": "string", "name": "corePersonality", "type": "string"},
+      {"internalType": "string", "name": "learningStyle", "type": "string"},
+      {"internalType": "uint256", "name": "adaptability", "type": "uint256"},
+      {"internalType": "string", "name": "moralAlignment", "type": "string"},
+      {"internalType": "uint256", "name": "experienceLevel", "type": "uint256"},
+      {"internalType": "uint256", "name": "lastUpdated", "type": "uint256"}
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {"internalType": "string", "name": "npcId", "type": "string"},
+      {"internalType": "string", "name": "corePersonality", "type": "string"},
+      {"internalType": "string", "name": "learningStyle", "type": "string"},
+      {"internalType": "uint256", "name": "adaptability", "type": "uint256"},
+      {"internalType": "string", "name": "moralAlignment", "type": "string"},
+      {"internalType": "uint256", "name": "experienceLevel", "type": "uint256"}
+    ],
+    "name": "updateTraits",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {"internalType": "string", "name": "npcId", "type": "string"},
+      {"internalType": "bytes32", "name": "memoryHash", "type": "bytes32"}
+    ],
+    "name": "storeMemoryHash",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
