@@ -1,33 +1,119 @@
 # CONTROL CV Project
 
-## Getting Started
+A professional Node.js backend application with a well-structured architecture following industry best practices.
 
-Follow these steps to run the CONTROL CV project:
+## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js installed on your system
-- A web browser
+- [Node.js](https://nodejs.org/) (v14 or higher)
+- npm (comes with Node.js)
 
-### Installation and Setup
+### Installation
 
-1. **Navigate to the backend directory**
-cd backend
-Make sure you are in the backend folder in your terminal.
+1. **Clone the repository**
+git clone https://github.com/Reyxpixel/BNB-AI-Hack
+cd control-cv-project
 
-2. **Start the server**
-node index.js
 
-3. **Access the application**
-Open any web browser and navigate to:
-http://localhost:3000/
+2. **Install dependencies**
+npm install
+3. **Set up environment variables**
+cp .env.example .env
 
-The site will now be accessible in real time at the specified localhost address.
+4. **Start the development server**
+npm run dev
 
-## Project Structure
-project-root/
-├── backend/
-│    └── index.js
-└── ...
 
-## Support
-For any issues or questions, please refer to the project documentation or contact the development team.
+5. **Access the application**
+Open your browser and navigate to: `http://localhost:3000`
+
+## 📁 Project Structure
+
+control-cv-project/
+├── src/
+│ ├── config/
+│ │ ├── database.js
+│ │ ├── app.js
+│ │ └── index.js
+│ ├── controllers/
+│ │ ├── authController.js
+│ │ ├── userController.js
+│ │ └── cvController.js
+│ ├── middleware/
+│ │ ├── auth.js
+│ │ ├── errorHandler.js
+│ │ └── validation.js
+│ ├── models/
+│ │ ├── User.js
+│ │ └── CV.js
+│ ├── routes/
+│ │ ├── auth.js
+│ │ ├── users.js
+│ │ ├── cv.js
+│ │ └── index.js
+│ ├── services/
+│ │ ├── authService.js
+│ │ ├── userService.js
+│ │ └── cvService.js
+│ ├── utils/
+│ │ ├── logger.js
+│ │ ├── helpers.js
+│ │ └── constants.js
+│ └── app.js
+├── public/
+│ ├── css/
+│ ├── js/
+│ ├── images/
+│ └── uploads/
+├── tests/
+│ ├── unit/
+│ ├── integration/
+│ └── fixtures/
+├── docs/
+│ └── api.md
+├── .env.example
+├── .gitignore
+├── package.json
+├── README.md
+└── server.js
+
+
+## 📦 Dependencies
+
+### Production Dependencies
+{
+"express": "^4.18.2",
+"mongoose": "^7.0.0",
+"bcryptjs": "^2.4.3",
+"jsonwebtoken": "^9.0.0",
+"cors": "^2.8.5",
+"helmet": "^6.0.1",
+"morgan": "^1.10.0",
+"dotenv": "^16.0.3",
+"express-rate-limit": "^6.7.0",
+"express-validator": "^6.15.0",
+"multer": "^1.4.5"
+}
+
+### Development Dependencies
+{
+"nodemon": "^2.0.22",
+"jest": "^29.5.0",
+"supertest": "^6.3.3",
+"eslint": "^8.38.0",
+"prettier": "^2.8.7"
+}
+
+## 🛠️ Available Scripts
+
+Start production server
+npm start
+
+Start development server with auto-reload
+npm run dev
+
+Run tests
+npm test
+
+Run tests with coverage
+npm run test:coverage
