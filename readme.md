@@ -27,57 +27,6 @@ npm run dev
 5. **Access the application**
 Open your browser and navigate to: `http://localhost:3000`
 
-## 📁 Project Structure
-
-control-cv-project/
-├── src/
-│ ├── config/
-│ │ ├── database.js
-│ │ ├── app.js
-│ │ └── index.js
-│ ├── controllers/
-│ │ ├── authController.js
-│ │ ├── userController.js
-│ │ └── cvController.js
-│ ├── middleware/
-│ │ ├── auth.js
-│ │ ├── errorHandler.js
-│ │ └── validation.js
-│ ├── models/
-│ │ ├── User.js
-│ │ └── CV.js
-│ ├── routes/
-│ │ ├── auth.js
-│ │ ├── users.js
-│ │ ├── cv.js
-│ │ └── index.js
-│ ├── services/
-│ │ ├── authService.js
-│ │ ├── userService.js
-│ │ └── cvService.js
-│ ├── utils/
-│ │ ├── logger.js
-│ │ ├── helpers.js
-│ │ └── constants.js
-│ └── app.js
-├── public/
-│ ├── css/
-│ ├── js/
-│ ├── images/
-│ └── uploads/
-├── tests/
-│ ├── unit/
-│ ├── integration/
-│ └── fixtures/
-├── docs/
-│ └── api.md
-├── .env.example
-├── .gitignore
-├── package.json
-├── README.md
-└── server.js
-
-
 ## 📦 Dependencies
 
 ### Production Dependencies
