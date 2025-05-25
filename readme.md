@@ -28,7 +28,45 @@ npm run dev
 Open your browser and navigate to: `http://localhost:3000`
 
 ## Structure
-<pre> ``` BNB-AI-HACK/ ├── backend/ # Core backend logic and API routes │ ├── abis/ # Smart contract ABIs │ ├── npc_memory/ # Memory storage handlers │ ├── public/ # Public assets served by backend │ ├── tests/ # Backend test files │ ├── llmclient.js # OpenAI/Groq client for NPC intelligence │ ├── npc.js # NPC class and logic │ ├── server.js # Express.js server │ ├── .env # Environment config (API keys, etc.) │ └── index.js # Backend entry point ├── build/contracts/ # Truffle build output ├── contracts/ # Solidity smart contracts │ ├── MemoryProof.sol │ └── NPCTraitStorage.sol ├── migrations/ # Truffle deployment scripts │ └── deploy_contracts.js ├── models/ # AI memory and personality models ├── npcs/ # NPC-specific JSON/personality data ├── frontend/ (if applicable) # Frontend files ├── index.html # Game UI ├── script.js # Game logic / client interface ├── style.css # Game styling ├── truffle-config.js # Truffle configuration ├── .secret # Blockchain private keys (DO NOT SHARE) ├── .gitignore └── readme.md ``` </pre>
+BNB-AI-HACK/
+├── backend/
+│   ├── abis/
+│   │   └── NPCTraitsABI.json
+│   ├── npc_memory/
+│   ├── public/
+│   ├── tests/
+│   ├── .env
+│   ├── index.js
+│   ├── llmclient.js
+│   ├── npc.js
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── pnpm-lock.yaml
+│   └── server.js
+├── build/
+│   └── contracts/
+│       └── MemoryProof.json
+├── contracts/
+│   ├── MemoryProof.sol
+│   └── NPCTraitStorage.sol
+├── migrations/
+│   ├── .gitkeep
+│   └── deploy_contracts.js
+├── models/
+├── node_modules/
+├── npcs/
+├── test/
+├── .gitignore
+├── .secret
+├── background.jpg
+├── index.html
+├── package-lock.json
+├── package.json
+├── readme.md
+├── script.js
+├── style.css
+└── truffle-config.js
+
 
 
 
