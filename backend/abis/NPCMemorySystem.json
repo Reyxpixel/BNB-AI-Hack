@@ -1,0 +1,665 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "string[]",
+        "name": "npcIds",
+        "type": "string[]"
+      },
+      {
+        "internalType": "string[]",
+        "name": "names",
+        "type": "string[]"
+      },
+      {
+        "internalType": "string[]",
+        "name": "descriptions",
+        "type": "string[]"
+      },
+      {
+        "internalType": "string[]",
+        "name": "modelPaths",
+        "type": "string[]"
+      },
+      {
+        "internalType": "string[]",
+        "name": "startingPrompts",
+        "type": "string[]"
+      },
+      {
+        "internalType": "string[]",
+        "name": "personalities",
+        "type": "string[]"
+      },
+      {
+        "internalType": "string[]",
+        "name": "attributes",
+        "type": "string[]"
+      }
+    ],
+    "name": "batchCreateNPCs",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "npcId",
+        "type": "string"
+      }
+    ],
+    "name": "checkNPCExists",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "npcId",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "description",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "modelPath",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "startingPrompt",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "personality",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "attributes",
+        "type": "string"
+      }
+    ],
+    "name": "createNPC",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getContractInfo",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "version",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "description",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "npcId",
+        "type": "string"
+      }
+    ],
+    "name": "getLatestMemory",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "memoryHash",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "recordIndex",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "npcId",
+        "type": "string"
+      }
+    ],
+    "name": "getNPCMemoryCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "npcId",
+        "type": "string"
+      }
+    ],
+    "name": "getNPCMemoryIndexes",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "npcId",
+        "type": "string"
+      }
+    ],
+    "name": "getNPCTraits",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "modelPath",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "startingPrompt",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "personality",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "attributes",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "experienceLevel",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastUpdated",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct NPCMemorySystem.NPCTraits",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      }
+    ],
+    "name": "getRecord",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "npcId",
+        "type": "string"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "memoryHash",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "npcId",
+        "type": "string"
+      }
+    ],
+    "name": "getTraits",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "modelPath",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "startingPrompt",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "personality",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "attributes",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "experienceLevel",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastUpdated",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct NPCMemorySystem.NPCTraits",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getTotalRecords",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "name": "npcExists",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "npcMemoryIndexes",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "name": "npcTraits",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "description",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "modelPath",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "startingPrompt",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "personality",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "attributes",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "experienceLevel",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "lastUpdated",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "records",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "npcId",
+        "type": "string"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "memoryHash",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "npcId",
+        "type": "string"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "memoryHash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "storeMemory",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "npcId",
+        "type": "string"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "memoryHash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "storeMemoryHash",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "npcId",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "personality",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "attributes",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "experienceLevel",
+        "type": "uint256"
+      }
+    ],
+    "name": "updateTraits",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "npcId",
+        "type": "string"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "memoryHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "recordIndex",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "MemoryStored",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "string",
+        "name": "npcId",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "description",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "modelPath",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "startingPrompt",
+        "type": "string"
+      }
+    ],
+    "name": "NPCCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "string",
+        "name": "npcId",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "experienceLevel",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "TraitsUpdated",
+    "type": "event"
+  }
+]
