@@ -28,6 +28,7 @@ npm run dev
 Open your browser and navigate to: `http://localhost:3000`
 
 ## Structure
+```
 BNB-AI-HACK
 │
 ├── backend/                         # Core backend and API logic
@@ -72,7 +73,7 @@ BNB-AI-HACK
 ├── script.js                       # Game logic / client interface
 ├── style.css                       # Game styling
 └── truffle-config.js               # Truffle configuration
-
+```
 
 
 
