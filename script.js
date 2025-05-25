@@ -61,12 +61,12 @@ const npcDatabase = [
   {
     name: "Rogue Man",
     description:
-      "A streetwise hustler who knows every alley and angle in the city.",
+      "A street thug who has faced many dangerous situations.",
     modelPath: "models/hipster.glb",
     startingPrompt:
       "You look lost, friend. Around here, you need sharp eyes and sharper instincts. What are you after—info, favors, or just trouble?",
     personality: "slick, street-smart, playful, uses urban slang and banter",
-    attributes: ["Agile", "Charismatic", "Resourceful", "Streetwise"],
+    attributes: ["Agile", "Rough", "Resourceful", "Mischevous"],
     camera: { x: 0.5, y: 1, z: 3.5 }
   },
 ]
@@ -542,7 +542,7 @@ async function sendMessage() {
     // Show typing indicator
     const typingDiv = document.createElement('div');
     typingDiv.className = 'message npc-message';
-    typingDiv.innerHTML = '<div class="message-content">Processing through neural network...</div>';
+    typingDiv.innerHTML = '<div class="message-content">Thinking...</div>';
     document.querySelector('.chat-content').appendChild(typingDiv);
     
     try {
