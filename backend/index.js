@@ -65,6 +65,7 @@ async function validateContract() {
         console.log('✅ Contract exists at address');
         return true;
     } catch (error) {
+        console.log('❌ Contract does not exist at address');
         return false;
     }
 }
@@ -126,6 +127,7 @@ Promise.all([
 ]).then(([greenfieldOk, contractOk]) => {
     console.log('Startup validation results:');
     console.log('- Greenfield:', greenfieldOk ? '✅' : '❌');
+    console.log('- Contract:', contractOk ? '✅' : '❌');
 }).catch(console.error);
 
 // Root route
