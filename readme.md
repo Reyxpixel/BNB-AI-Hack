@@ -27,55 +27,54 @@ npm run dev
 5. **Access the application**
 Open your browser and navigate to: `http://localhost:3000`
 
-## 📁 Project Structure
-
-control-cv-project/
-├── src/
-│ ├── config/
-│ │ ├── database.js
-│ │ ├── app.js
-│ │ └── index.js
-│ ├── controllers/
-│ │ ├── authController.js
-│ │ ├── userController.js
-│ │ └── cvController.js
-│ ├── middleware/
-│ │ ├── auth.js
-│ │ ├── errorHandler.js
-│ │ └── validation.js
-│ ├── models/
-│ │ ├── User.js
-│ │ └── CV.js
-│ ├── routes/
-│ │ ├── auth.js
-│ │ ├── users.js
-│ │ ├── cv.js
-│ │ └── index.js
-│ ├── services/
-│ │ ├── authService.js
-│ │ ├── userService.js
-│ │ └── cvService.js
-│ ├── utils/
-│ │ ├── logger.js
-│ │ ├── helpers.js
-│ │ └── constants.js
-│ └── app.js
-├── public/
-│ ├── css/
-│ ├── js/
-│ ├── images/
-│ └── uploads/
-├── tests/
-│ ├── unit/
-│ ├── integration/
-│ └── fixtures/
-├── docs/
-│ └── api.md
-├── .env.example
+## Structure
+```
+BNB-AI-HACK
+│
+├── backend/                         # Core backend and API logic
+│   ├── abis/
+│   │   └── NPCTraitsABI.json
+│   ├── npc_memory/
+│   ├── public/
+│   ├── tests/
+│   ├── .env
+│   ├── index.js
+│   ├── llmclient.js
+│   ├── npc.js
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── pnpm-lock.yaml
+│   └── server.js
+│
+├── build/
+│   └── contracts/
+│       └── MemoryProof.json
+│
+├── contracts/                      # Solidity smart contracts
+│   ├── MemoryProof.sol
+│   └── NPCTraitStorage.sol
+│
+├── migrations/                     # Truffle deployment scripts
+│   ├── .gitkeep
+│   └── deploy_contracts.js
+│
+├── models/                         # AI memory and personality models
+├── node_modules/
+├── npcs/                           # NPC JSON/personality data
+├── test/
+│
 ├── .gitignore
+├── .secret                         # Blockchain private keys (do not share)
+├── background.jpg
+├── index.html                      # Game UI
+├── package-lock.json
 ├── package.json
-├── README.md
-└── server.js
+├── readme.md
+├── script.js                       # Game logic / client interface
+├── style.css                       # Game styling
+└── truffle-config.js               # Truffle configuration
+```
+
 
 
 ## 📦 Dependencies
