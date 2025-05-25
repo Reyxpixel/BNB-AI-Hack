@@ -27,6 +27,36 @@ npm run dev
 5. **Access the application**
 Open your browser and navigate to: `http://localhost:3000`
 
+## Structure
+BNB-AI-HACK/
+├── backend/              # Core backend logic and API routes
+│   ├── abis/             # Smart contract ABIs
+│   ├── npc_memory/       # Memory storage handlers
+│   ├── public/           # Public assets served by backend
+│   ├── tests/            # Backend test files
+│   ├── llmclient.js      # OpenAI/Groq client for NPC intelligence
+│   ├── npc.js            # NPC class and logic
+│   ├── server.js         # Express.js server
+│   ├── .env              # Environment config (API keys, etc.)
+│   └── index.js          # Entry point
+├── build/contracts/      # Truffle build output
+├── contracts/            # Solidity smart contracts
+│   ├── MemoryProof.sol
+│   └── NPCTraitStorage.sol
+├── migrations/           # Truffle deployment scripts
+├── models/               # AI memory and personality models
+├── npcs/                 # NPC-specific JSON/personality data
+├── frontend/             # (If applicable) Frontend files
+├── index.html            # Game UI
+├── script.js             # Game logic / client interface
+├── style.css             # Game styling
+├── truffle-config.js     # Truffle configuration
+├── .secret               # Blockchain private keys (DO NOT SHARE)
+├── .gitignore
+└── readme.md
+
+
+
 ## 📦 Dependencies
 
 ### Production Dependencies
