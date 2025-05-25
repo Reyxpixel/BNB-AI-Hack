@@ -28,8 +28,9 @@ npm run dev
 Open your browser and navigate to: `http://localhost:3000`
 
 ## Structure
-BNB-AI-HACK/
-├── backend/
+BNB-AI-HACK
+│
+├── backend/                         # Core backend and API logic
 │   ├── abis/
 │   │   └── NPCTraitsABI.json
 │   ├── npc_memory/
@@ -43,29 +44,34 @@ BNB-AI-HACK/
 │   ├── package.json
 │   ├── pnpm-lock.yaml
 │   └── server.js
+│
 ├── build/
 │   └── contracts/
 │       └── MemoryProof.json
-├── contracts/
+│
+├── contracts/                      # Solidity smart contracts
 │   ├── MemoryProof.sol
 │   └── NPCTraitStorage.sol
-├── migrations/
+│
+├── migrations/                     # Truffle deployment scripts
 │   ├── .gitkeep
 │   └── deploy_contracts.js
-├── models/
+│
+├── models/                         # AI memory and personality models
 ├── node_modules/
-├── npcs/
+├── npcs/                           # NPC JSON/personality data
 ├── test/
+│
 ├── .gitignore
-├── .secret
+├── .secret                         # Blockchain private keys (do not share)
 ├── background.jpg
-├── index.html
+├── index.html                      # Game UI
 ├── package-lock.json
 ├── package.json
 ├── readme.md
-├── script.js
-├── style.css
-└── truffle-config.js
+├── script.js                       # Game logic / client interface
+├── style.css                       # Game styling
+└── truffle-config.js               # Truffle configuration
 
 
 
